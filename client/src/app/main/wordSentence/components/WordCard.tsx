@@ -2,24 +2,18 @@
 
 import { useState, useEffect } from "react";
 import { WordData } from "../utils/data";
-import Image from "next/image";
-
 
 interface WordCardProps {
   wordData: WordData;
   onNext: (correct: boolean) => void;
 }
 
-interface SelectedLetter {
-  letter: string;
-  index: number;
-}
-
 const WordCard: React.FC<WordCardProps> = ({ wordData, onNext }) => {
-  const [selectedLetters, setSelectedLetters] = useState<SelectedLetter[]>([]);
+  const [userLetters, setUserLetters] = useState<(string | null)[]>(
+    Array(wordData.word.length).fill(null)
+  );
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const [popIndex, setPopIndex] = useState<number | null>(null);
-  
 
   useEffect(() => {
     if (popIndex !== null) {
@@ -28,64 +22,60 @@ const WordCard: React.FC<WordCardProps> = ({ wordData, onNext }) => {
     }
   }, [popIndex]);
 
-  const addLetter = (letter: string, idx: number) => {
-    if (selectedLetters.find((l) => l.index === idx)) return;
-    if (selectedLetters.length < wordData.word.length) {
-      setSelectedLetters([...selectedLetters, { letter, index: idx }]);
-      setPopIndex(selectedLetters.length);
-    }
-  };
+  const toggleLetter = (letter: string) => {
+    const newLetters = [...userLetters];
 
-  const removeLetter = (pos: number) => {
-    const newLetters = [...selectedLetters];
-    newLetters.splice(pos, 1);
-    setSelectedLetters(newLetters);
+    // давхар letter-ийг зөв тохиолдолд зөв байрлалд нэмэх
+    const firstEmpty = newLetters.indexOf(null);
+    if (firstEmpty !== -1) {
+      newLetters[firstEmpty] = letter;
+      setPopIndex(firstEmpty);
+    } else {
+      // Letter-ийг арилгах (undo)
+      const removeIdx = newLetters.indexOf(letter);
+      if (removeIdx !== -1) newLetters[removeIdx] = null;
+    }
+
+    setUserLetters(newLetters);
   };
 
   const checkAnswer = () => {
-    const userWord = selectedLetters.map((l) => l.letter).join("");
-    setIsCorrect(userWord === wordData.word);
+    const correct = userLetters.join("") === wordData.word;
+    setIsCorrect(correct);
   };
 
   const handleNext = () => {
     onNext(isCorrect === true);
-    setSelectedLetters([]);
-    setIsCorrect(null);
-    setPopIndex(null);
-  };
-
-  const handleReset = () => {
-    setSelectedLetters([]);
+    setUserLetters(Array(wordData.word.length).fill(null));
     setIsCorrect(null);
     setPopIndex(null);
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-xl p-6 flex flex-col items-center w-full max-w-md">
+    <div className="bg-white rounded-2xl shadow-xl p-6 flex flex-col items-center">
       {/* Image */}
-    
-<Image
-  src={wordData.image}
-  alt={wordData.word}
-  width={256}
-  height={256}
-  className="rounded-lg mb-6 shadow object-contain"
-/>
+      {wordData.image && (
+        <img
+          src={wordData.image}
+          alt={wordData.word}
+          className="w-64 h-64 object-contain rounded-lg mb-6 shadow"
+        />
+      )}
 
-      {/* Letter buttons */}
+      {/* Letters Buttons */}
       <div className="flex flex-wrap justify-center gap-2 mb-6">
         {wordData.letters.map((letter, idx) => {
-          const selected = selectedLetters.find((l) => l.index === idx);
+          const selectedIdx = userLetters.indexOf(letter);
+          let bg = "bg-gray-200 hover:bg-gray-300";
+
+          // зөв дарагдсан бол ногоон
+          if (selectedIdx !== -1 && letter === wordData.word[selectedIdx]) bg = "bg-green-400 text-white";
+
           return (
             <button
               key={idx}
-              onClick={() => addLetter(letter, idx)}
-              disabled={!!selected}
-              className={`w-12 h-12 flex items-center justify-center border rounded-xl text-lg font-medium transition-all duration-200 transform ${
-                selected
-                  ? "bg-green-700 text-white cursor-not-allowed"
-                  : "bg-yellow-200 hover:bg-yellow-300 hover:scale-110"
-              }`}
+              onClick={() => toggleLetter(letter)}
+              className={`w-12 h-12 flex items-center justify-center border rounded-xl font-medium transition-colors ${bg}`}
             >
               {letter}
             </button>
@@ -93,28 +83,25 @@ const WordCard: React.FC<WordCardProps> = ({ wordData, onNext }) => {
         })}
       </div>
 
-      {/* Selected letters */}
+      {/* Selected Letters Display */}
       <div className="text-center mb-6 flex flex-wrap justify-center gap-2">
-        {selectedLetters.map((l, idx) => (
-          <span
-            key={idx}
-            onClick={() => removeLetter(idx)}
-            className={`inline-block px-4 py-2 text-2xl font-bold rounded-lg cursor-pointer transition-all duration-200 transform bg-green-700 text-white ${
-              popIndex === idx ? "scale-125" : "scale-100"
-            }`}
-          >
-            {l.letter}
-          </span>
-        ))}
-      </div>
+        {userLetters.map((letter, idx) => {
+          let bg = "bg-gray-100 text-gray-700";
+          if (letter) {
+            bg = letter === wordData.word[idx] ? "bg-green-200 text-green-800" : "bg-red-200 text-red-800";
+          }
 
-      {/* Result */}
-      <div className="text-center mb-6">
-        {isCorrect !== null && (
-          <p className={`text-xl font-bold ${isCorrect ? "text-green-600" : "text-red-600"}`}>
-            {isCorrect ? "Зөв!" : "Буруу!"}
-          </p>
-        )}
+          return (
+            <span
+              key={idx}
+              className={`inline-block w-12 h-12 flex items-center justify-center text-2xl font-bold rounded-lg transition-all duration-200 transform ${
+                popIndex === idx ? "scale-125" : "scale-100"
+              } ${bg}`}
+            >
+              {letter || ""}
+            </span>
+          );
+        })}
       </div>
 
       {/* Buttons */}
@@ -132,18 +119,10 @@ const WordCard: React.FC<WordCardProps> = ({ wordData, onNext }) => {
           <button
             onClick={handleNext}
             className="px-6 py-3 bg-yellow-400 text-black rounded-full hover:bg-yellow-500 transition shadow-lg text-xl font-bold"
-            style={{ boxShadow: "0 4px 12px rgba(0,0,0,0.2)" }}
           >
             Дараах
           </button>
         )}
-
-        <button
-          onClick={handleReset}
-          className="px-6 py-2 bg-gray-400 text-white rounded-full hover:bg-gray-500 transition shadow-md"
-        >
-          Дахин хийх
-        </button>
       </div>
     </div>
   );
