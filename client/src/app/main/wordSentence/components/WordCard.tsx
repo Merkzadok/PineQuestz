@@ -10,15 +10,14 @@ interface WordCardProps {
 
 interface SelectedLetter {
   letter: string;
-  pos: number; // position in the word
+  index: number;
 }
 
 const WordCard: React.FC<WordCardProps> = ({ wordData, onNext }) => {
-  const [userLetters, setUserLetters] = useState<SelectedLetter[]>([]);
+  const [selectedLetters, setSelectedLetters] = useState<SelectedLetter[]>([]);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const [popIndex, setPopIndex] = useState<number | null>(null);
 
-  // Animate the latest added letter
   useEffect(() => {
     if (popIndex !== null) {
       const timer = setTimeout(() => setPopIndex(null), 200);
@@ -26,42 +25,40 @@ const WordCard: React.FC<WordCardProps> = ({ wordData, onNext }) => {
     }
   }, [popIndex]);
 
-  // Add a letter to the next available position
-  const addLetter = (letter: string) => {
-    if (userLetters.length < wordData.word.length) {
-      const nextPos = userLetters.length;
-      setUserLetters([...userLetters, { letter, pos: nextPos }]);
-      setPopIndex(nextPos);
+  const addLetter = (letter: string, idx: number) => {
+    if (selectedLetters.find((l) => l.index === idx)) return;
+    if (selectedLetters.length < wordData.word.length) {
+      setSelectedLetters([...selectedLetters, { letter, index: idx }]);
+      setPopIndex(selectedLetters.length);
     }
   };
 
-  // Remove a specific letter when clicking on the selected letters
-  const removeLetter = (index: number) => {
-    const newLetters = userLetters.filter((_, i) => i !== index);
-    setUserLetters(newLetters);
+  const removeLetter = (pos: number) => {
+    const newLetters = [...selectedLetters];
+    newLetters.splice(pos, 1);
+    setSelectedLetters(newLetters);
   };
 
-  // Check if letters match
   const checkAnswer = () => {
-    const userWord = userLetters.map((l) => l.letter).join("");
+    const userWord = selectedLetters.map((l) => l.letter).join("");
     setIsCorrect(userWord === wordData.word);
   };
 
   const handleNext = () => {
     onNext(isCorrect === true);
-    setUserLetters([]);
+    setSelectedLetters([]);
     setIsCorrect(null);
     setPopIndex(null);
   };
 
   const handleReset = () => {
-    setUserLetters([]);
+    setSelectedLetters([]);
     setIsCorrect(null);
     setPopIndex(null);
   };
 
   return (
-    <div className="bg-gray-50 rounded-2xl shadow-xl p-6 flex flex-col items-center w-full max-w-md">
+    <div className="bg-white rounded-2xl shadow-xl p-6 flex flex-col items-center w-full max-w-md">
       {/* Image */}
       <img
         src={wordData.image}
@@ -69,38 +66,43 @@ const WordCard: React.FC<WordCardProps> = ({ wordData, onNext }) => {
         className="w-64 h-64 object-contain rounded-lg mb-6 shadow"
       />
 
-      {/* Letters Buttons */}
+      {/* Letter buttons */}
       <div className="flex flex-wrap justify-center gap-2 mb-6">
-        {wordData.letters.map((letter, idx) => (
-          <button
-            key={idx}
-            onClick={() => addLetter(letter)}
-            className="w-12 h-12 flex items-center justify-center border rounded-xl text-lg font-medium hover:bg-gray-100 transition-colors"
-          >
-            {letter}
-          </button>
-        ))}
-      </div>
-
-      {/* Selected Letters Display */}
-      <div className="text-center mb-6 flex flex-wrap justify-center gap-2">
-        {userLetters.map((l, idx) => {
-          const correct = l.letter === wordData.word[idx];
+        {wordData.letters.map((letter, idx) => {
+          const selected = selectedLetters.find((l) => l.index === idx);
           return (
-            <span
+            <button
               key={idx}
-              onClick={() => removeLetter(idx)}
-              className={`inline-block px-4 py-2 text-2xl font-bold rounded-lg cursor-pointer transition-all duration-200 transform ${
-                correct ? "bg-green-500 text-white shadow-md" : "bg-yellow-400 text-black shadow-sm"
-              } ${popIndex === idx ? "scale-125" : "scale-100"}`}
+              onClick={() => addLetter(letter, idx)}
+              disabled={!!selected}
+              className={`w-12 h-12 flex items-center justify-center border rounded-xl text-lg font-medium transition-all duration-200 transform ${
+                selected
+                  ? "bg-green-700 text-white cursor-not-allowed"
+                  : "bg-yellow-200 hover:bg-yellow-300 hover:scale-110"
+              }`}
             >
-              {l.letter}
-            </span>
+              {letter}
+            </button>
           );
         })}
       </div>
 
-      {/* Result Text */}
+      {/* Selected letters */}
+      <div className="text-center mb-6 flex flex-wrap justify-center gap-2">
+        {selectedLetters.map((l, idx) => (
+          <span
+            key={idx}
+            onClick={() => removeLetter(idx)}
+            className={`inline-block px-4 py-2 text-2xl font-bold rounded-lg cursor-pointer transition-all duration-200 transform bg-green-700 text-white ${
+              popIndex === idx ? "scale-125" : "scale-100"
+            }`}
+          >
+            {l.letter}
+          </span>
+        ))}
+      </div>
+
+      {/* Result */}
       <div className="text-center mb-6">
         {isCorrect !== null && (
           <p className={`text-xl font-bold ${isCorrect ? "text-green-600" : "text-red-600"}`}>
@@ -124,7 +126,7 @@ const WordCard: React.FC<WordCardProps> = ({ wordData, onNext }) => {
           <button
             onClick={handleNext}
             className="px-6 py-3 bg-yellow-400 text-black rounded-full hover:bg-yellow-500 transition shadow-lg text-xl font-bold"
-            style={{ boxShadow: "0 4px 12px rgba(0, 0, 0, 0.2)" }}
+            style={{ boxShadow: "0 4px 12px rgba(0,0,0,0.2)" }}
           >
             Дараах
           </button>

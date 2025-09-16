@@ -21,21 +21,21 @@ export default function Home() {
 
   if (!words.length)
     return (
-      <div className="min-h-screen flex items-center justify-center bg-blue-50">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-blue-100 to-blue-50">
         <p className="text-blue-400 text-xl animate-pulse">Loading...</p>
       </div>
     );
 
   if (currentIndex >= words.length)
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-blue-50 px-4">
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-blue-100 to-blue-50 px-4">
         <p className="text-3xl font-bold mb-4 text-green-600">🎉 Тоглолт дууслаа!</p>
         <p className="text-xl text-gray-700">
           Таны Streak: <span className="font-semibold text-green-600">{streak}</span>
         </p>
         <button
           onClick={() => { setCurrentIndex(0); setStreak(0); }}
-          className="mt-6 px-6 py-2 bg-green-500 text-white rounded-full hover:bg-green-600 transition"
+          className="mt-6 px-6 py-2 bg-green-500 text-white rounded-full hover:bg-green-600 shadow-lg transition"
         >
           Дахин эхлэх
         </button>
@@ -45,12 +45,12 @@ export default function Home() {
   const progressPercent = ((currentIndex) / words.length) * 100;
 
   return (
-    <div className="min-h-screen bg-blue-50 flex flex-col items-center justify-start px-4 pt-8">
+    <div className="min-h-screen bg-gradient-to-b from-blue-100 to-blue-50 flex flex-col items-center justify-start px-4 pt-8">
       {/* Progress bar */}
       <div className="w-full max-w-md mb-6">
-        <div className="w-full h-4 bg-gray-200 rounded-full overflow-hidden shadow-inner">
+        <div className="w-full h-4 bg-blue-200 rounded-full overflow-hidden shadow-inner">
           <div
-            className="h-4 bg-green-500 rounded-full transition-all duration-500"
+            className="h-4 bg-green-400 rounded-full transition-all duration-500"
             style={{ width: `${progressPercent}%` }}
           ></div>
         </div>
@@ -60,7 +60,7 @@ export default function Home() {
       </div>
 
       {/* Streak display */}
-      <div className="mb-6 w-full max-w-md flex justify-between items-center bg-white shadow-md rounded-xl px-6 py-4 border border-gray-200">
+      <div className="mb-6 w-full max-w-md flex justify-between items-center bg-white shadow-lg rounded-2xl px-6 py-4 border border-gray-200">
         <p className="text-lg font-semibold text-gray-700">Streak:</p>
         <p className="text-2xl font-bold text-green-600">{streak}</p>
       </div>
@@ -80,3 +80,4 @@ const shuffleArray = <T,>(arr: T[]): T[] => {
     .sort((a, b) => a.sort - b.sort)
     .map(({ v }) => v);
 };
+
