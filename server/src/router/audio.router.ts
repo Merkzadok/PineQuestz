@@ -1,12 +1,8 @@
 import express from "express";
-import multer from "multer";
-import { uploadAudio } from "../controller/audio/upload-audio.controller";
+import { textToSpeech } from "../controller/audio/tts.controller";
 
 const audioRouter = express.Router();
 
-const storage = multer.memoryStorage();
-const upload = multer({ storage });
-
-audioRouter.post("/upload-audio", upload.single("audio"), uploadAudio);
+audioRouter.post("/upload-audio", textToSpeech);
 
 export default audioRouter;
