@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { TextSpeakerProvider } from "@/provider/TextContext";
 import AnimatedWrapper from "@/components/Animated-wrapper";
+import MainHeader from "./components/MainHeader";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -35,6 +36,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <TextSpeakerProvider>
+          <MainHeader />
           <AnimatedWrapper>{children}</AnimatedWrapper>
         </TextSpeakerProvider>
       </body>
