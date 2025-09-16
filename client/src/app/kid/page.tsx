@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { Mascot } from "@/app/parent/components/Mascot";
 import { ProgressRoadmap } from "@/app/parent/components/ProgressRoadMap";
+import { useRouter } from "next/navigation";
 
 // Type definitions
 interface Lesson {
@@ -10,6 +11,7 @@ interface Lesson {
 }
 
 const KidPage: React.FC = () => {
+  const router = useRouter();
   const [currentLesson, setCurrentLesson] = useState<number>(1);
 
   const lessons: Lesson[] = [
@@ -24,7 +26,10 @@ const KidPage: React.FC = () => {
   ];
 
   const handleLessonSelect = (lesson: Lesson) => {
-    if (lesson.id <= currentLesson) console.log("Starting lesson:", lesson.id);
+    if (lesson.id <= currentLesson) {
+      // Navigate to the dynamic lesson page
+      router.push(`/main/crossword/${lesson.id}`);
+    }
   };
 
   return (
