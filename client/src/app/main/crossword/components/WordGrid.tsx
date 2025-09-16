@@ -34,25 +34,36 @@ export default function WordSearchPage() {
     { word: "морь", image: "/images/horse.jpg" },
     { word: "сар", image: "/images/moon.jpg" },
     { word: "шоо", image: "/images/cube.jpeg" },
+    { word: "хавар", image: "/images/spring.webp" },
+    { word: "хүүхэд", image: "/images/child.webp" },
+    { word: "хөлөг", image: "/images/ship.jpeg" },
+    { word: "үхэр", image: "/images/cow.webp" },
   ];
 
   const [grid, setGrid] = useState<Cell[][]>([]);
   const [selectedCells, setSelectedCells] = useState<[number, number][]>([]);
   const [foundWords, setFoundWords] = useState<string[]>([]);
+  const [activeWords, setActiveWords] = useState<Word[]>([]);
+  function getRandomWords(list: Word[], count: number): Word[] {
+    const shuffled = [...list].sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, count);
+  }
 
   // Generate grid on mount
   useEffect(() => {
+    const selected = getRandomWords(words, 5);
+    setActiveWords(selected);
     setGrid(
       generateGrid(
         rows,
         cols,
-        words.map((w) => w.word)
+        selected.map((w) => w.word)
       )
     );
   }, []);
 
   function generateGrid(r: number, c: number, wordList: string[]): Cell[][] {
-    const letters = "масрхвлншаэиоуөү"; // allowed letters
+    const letters = "масрхвлншэиоуөү"; // allowed letters
     const grid: Cell[][] = Array.from({ length: r }, () =>
       Array.from({ length: c }, () => ({
         letter: "",
@@ -133,8 +144,7 @@ export default function WordSearchPage() {
     const selectedWord = selection
       .map(([r, c]) => newGrid[r][c].letter)
       .join("");
-
-    words.forEach((w) => {
+    activeWords.forEach((w) => {
       if (selectedWord === w.word && !foundWords.includes(w.word)) {
         selection.forEach(([r, c]) => {
           newGrid[r][c].isFound = true;
@@ -149,11 +159,13 @@ export default function WordSearchPage() {
   const resetGame = () => {
     setFoundWords([]);
     setSelectedCells([]);
+    const selected = getRandomWords(words, 5);
+    setActiveWords(selected);
     setGrid(
       generateGrid(
         rows,
         cols,
-        words.map((w) => w.word)
+        selected.map((w) => w.word)
       )
     );
   };
@@ -176,17 +188,18 @@ export default function WordSearchPage() {
               Зургийг олж, үгийг хай!
             </p>
           </div>
-          {foundWords.length === words.length && (
-            <div className="mt-4 p-4 bg-green-50 rounded-lg border border-green-200">
-              <div className="flex items-center justify-center gap-2">
-                <Trophy className="w-8 h-8 text-green-600 animate-pulse" />
-                <p className="text-green-800 text-xl font-bold">
-                  Баяр хүргэе! Бүх үгийг оллоо!
-                </p>
-                <Trophy className="w-8 h-8 text-green-600 animate-pulse" />
+          {activeWords.length > 0 &&
+            foundWords.length === activeWords.length && (
+              <div className="mt-4 p-4 bg-green-50 rounded-lg border border-green-200">
+                <div className="flex items-center justify-center gap-2">
+                  <Trophy className="w-8 h-8 text-green-600 animate-pulse" />
+                  <p className="text-green-800 text-xl font-bold">
+                    Баяр хүргэе! Бүх үгийг оллоо!
+                  </p>
+                  <Trophy className="w-8 h-8 text-green-600 animate-pulse" />
+                </div>
               </div>
-            </div>
-          )}
+            )}
         </div>
 
         <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 items-start justify-center">
@@ -257,7 +270,7 @@ export default function WordSearchPage() {
                 </h2>
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3 gap-3">
-                {words.map((w, index) => (
+                {activeWords.map((w, index) => (
                   <div
                     key={w.word}
                     className={`
@@ -312,14 +325,16 @@ export default function WordSearchPage() {
                 <div className="flex justify-center items-center gap-2 mb-2">
                   <BarChart3 className="w-5 h-5 text-gray-600" />
                   <span className="text-gray-700 font-semibold">
-                    {foundWords.length} / {words.length}
+                    {foundWords.length} / {activeWords.length}
                   </span>
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-3">
                   <div
                     className="bg-gray-900 h-3 rounded-full transition-all duration-500"
                     style={{
-                      width: `${(foundWords.length / words.length) * 100}%`,
+                      width: `${
+                        (foundWords.length / activeWords.length) * 100
+                      }%`,
                     }}
                   ></div>
                 </div>
