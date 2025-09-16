@@ -3,6 +3,6 @@ import { textToSpeech } from "../controller/audio/tts.controller";
 
 const audioRouter = express.Router();
 
-audioRouter.post("/upload-audio", textToSpeech);
+audioRouter.post("/tts", textToSpeech);
 
 export default audioRouter;
