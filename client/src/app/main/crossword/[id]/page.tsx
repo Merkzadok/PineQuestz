@@ -15,8 +15,10 @@ const CrossWordPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col items-center p-4">
-      {lessonMap[lessonId] || <p>Lesson not found</p>}
+    <div>
+      <div className="min-h-screen bg-gray-50 flex flex-col items-center p-4">
+        {lessonMap[lessonId] || <p>Lesson not found</p>}
+      </div>
     </div>
   );
 };
