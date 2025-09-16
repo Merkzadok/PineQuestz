@@ -1,9 +1,9 @@
-import WordGridPage from "./components/WordGrid";
+import WordSearchPage from "./components/WordGrid";
 
 const CrossWord = () => {
   return (
     <div>
-      <WordGridPage />
+      <WordSearchPage />
     </div>
   );
 };
