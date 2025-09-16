@@ -18,7 +18,7 @@ export const textToSpeech = async (req: Request, res: Response) => {
 
     const arrayBuffer = await response.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
-
+    console.log("");
     // Client-д шууд аудио stream илгээх
     res.setHeader("Content-Type", "audio/wav");
     res.send(buffer);
