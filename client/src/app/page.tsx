@@ -36,7 +36,7 @@ function App() {
           }`}
         >
           <h1 className="text-4xl md:text-5xl font-light text-gray-900 mb-4 tracking-tight">
-            PineQuest
+            LittleReaders
           </h1>
           <div className="w-12 h-0.5 bg-gray-300 mx-auto"></div>
         </div>

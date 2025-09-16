@@ -178,14 +178,14 @@ export default function CrossWordLevel1() {
           <div className="flex items-center justify-center gap-2 mb-2">
             <Target className="w-8 h-8 text-gray-700" />
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900">
-              Монгол Үгийн Сүлжээ
+              Үгийг хайх тоглоом
             </h1>
             <Target className="w-8 h-8 text-gray-700" />
           </div>
           <div className="flex items-center justify-center gap-2">
             <Search className="w-5 h-5 text-gray-600" />
             <p className="text-gray-600 text-lg sm:text-xl">
-              Зургийг олж, үгийг хай!
+              Зургийг олж, үгийг хайна уу!
             </p>
           </div>
           {activeWords.length > 0 &&
