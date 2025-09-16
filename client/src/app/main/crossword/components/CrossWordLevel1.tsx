@@ -10,6 +10,7 @@ import {
   ImageIcon,
   BarChart3,
 } from "lucide-react";
+import { useTextSpeaker } from "@/provider/TextContext";
 
 type Cell = {
   letter: string;
@@ -170,6 +171,10 @@ export default function CrossWordLevel1() {
     );
   };
 
+  const speakText = useTextSpeaker();
+
+  const text = "Зургийг олж, үгийг хай!";
+
   return (
     <div className="min-h-screen bg-gray-50 p-4 sm:p-6">
       <div className="max-w-4xl mx-auto">
@@ -184,9 +189,8 @@ export default function CrossWordLevel1() {
           </div>
           <div className="flex items-center justify-center gap-2">
             <Search className="w-5 h-5 text-gray-600" />
-            <p className="text-gray-600 text-lg sm:text-xl">
-              Зургийг олж, үгийг хайна уу!
-            </p>
+            <p className="text-gray-600 text-lg sm:text-xl">{text}</p>
+            {/* <button onClick={() => speakText(text)}>Click</button> */}
           </div>
           {activeWords.length > 0 &&
             foundWords.length === activeWords.length && (
