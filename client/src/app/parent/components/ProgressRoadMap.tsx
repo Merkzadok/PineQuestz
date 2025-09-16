@@ -8,6 +8,7 @@ interface Lesson {
   title: string;
   stars?: number;
 }
+
 interface ProgressRoadmapProps {
   lessons: Lesson[];
   currentLesson: number;
@@ -19,6 +20,9 @@ export const ProgressRoadmap: React.FC<ProgressRoadmapProps> = ({
   currentLesson,
   onLessonSelect,
 }) => {
+  // Limit to 3 lessons
+  const limitedLessons = lessons.slice(0, 3);
+
   return (
     <div className="bg-white rounded-xl border p-6 shadow-lg">
       <div className="flex items-center gap-2 mb-4">
@@ -28,7 +32,7 @@ export const ProgressRoadmap: React.FC<ProgressRoadmapProps> = ({
       <div className="relative">
         <div className="absolute left-1/2 transform -translate-x-0.5 h-full w-1 bg-gray-200 rounded-full"></div>
         <div className="space-y-8">
-          {lessons.map((lesson) => (
+          {limitedLessons.map((lesson) => (
             <div key={lesson.id} className="relative flex justify-center">
               <RoadmapNode
                 lesson={lesson}
