@@ -14,5 +14,5 @@ app.use(cors());
 app.use("/audio", audioRouter);
 
 app.listen(PORT, () => {
-  console.log(`🚀 server running at http://localhost:${PORT}/graphql`);
+  console.log(`🚀 server running at http://localhost:${PORT}`);
 });
