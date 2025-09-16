@@ -23,7 +23,7 @@ type Word = {
   image: string; // path to image in /public/images
 };
 
-export default function WordSearchPage() {
+export default function CrossWordLevel1() {
   const rows = 6;
   const cols = 6;
 
