@@ -1,11 +1,10 @@
 "use client";
 import React from "react";
-import { BookOpen, CheckCircle, Lock, Star } from "lucide-react";
+import { BookOpen, CheckCircle, Lock } from "lucide-react";
 
 interface Lesson {
   id: number;
   title: string;
-  stars?: number;
 }
 
 interface RoadmapNodeProps {
@@ -29,6 +28,7 @@ export const RoadmapNode: React.FC<RoadmapNodeProps> = ({
       : isActive
       ? "bg-white text-gray-800 border-green-500 ring-2 ring-green-200"
       : "bg-gray-200 text-gray-400";
+
   const getIcon = () =>
     isCompleted ? (
       <CheckCircle className="w-5 h-5" />
@@ -50,13 +50,6 @@ export const RoadmapNode: React.FC<RoadmapNodeProps> = ({
       <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 text-xs font-medium text-gray-600">
         {lesson.id}
       </div>
-      {isCompleted && lesson.stars && (
-        <div className="absolute -top-2 -right-2 flex">
-          {Array.from({ length: lesson.stars }).map((_, i) => (
-            <Star key={i} className="w-3 h-3 text-yellow-400 fill-current" />
-          ))}
-        </div>
-      )}
     </button>
   );
 };
