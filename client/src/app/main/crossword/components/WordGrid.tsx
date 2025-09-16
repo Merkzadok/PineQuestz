@@ -1,6 +1,15 @@
 "use client";
 import Image from "next/image";
 import { useState, useEffect } from "react";
+import {
+  Target,
+  Search,
+  RotateCcw,
+  Trophy,
+  CheckCircle,
+  ImageIcon,
+  BarChart3,
+} from "lucide-react";
 
 type Cell = {
   letter: string;
@@ -20,7 +29,7 @@ export default function WordSearchPage() {
 
   // Mongolian words + images
   const words: Word[] = [
-    { word: "мал", image: "/images/sheep.jpg" },
+    { word: "сүx", image: "/images/axe.avif" },
     { word: "ном", image: "/images/book.jpeg" },
     { word: "морь", image: "/images/horse.jpg" },
     { word: "сар", image: "/images/moon.jpg" },
@@ -43,7 +52,7 @@ export default function WordSearchPage() {
   }, []);
 
   function generateGrid(r: number, c: number, wordList: string[]): Cell[][] {
-    const letters = "масрхвлншАЭИОУӨҮ"; // allowed letters
+    const letters = "масрхвлншаэиоуөү"; // allowed letters
     const grid: Cell[][] = Array.from({ length: r }, () =>
       Array.from({ length: c }, () => ({
         letter: "",
@@ -150,22 +159,32 @@ export default function WordSearchPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-300 p-4 sm:p-6 ">
+    <div className="min-h-screen bg-gray-50 p-4 sm:p-6">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="text-center mb-6 sm:mb-8">
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-2 drop-shadow-lg">
-            🎯 Монгол Үгийн Сүлжээ 🎯
-          </h1>
-          <p className="text-white text-lg sm:text-xl drop-shadow">
-            Зургийг олж, үгийг хай! 🔍
-          </p>
+          <div className="flex items-center justify-center gap-2 mb-2">
+            <Target className="w-8 h-8 text-gray-700" />
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900">
+              Монгол Үгийн Сүлжээ
+            </h1>
+            <Target className="w-8 h-8 text-gray-700" />
+          </div>
+          <div className="flex items-center justify-center gap-2">
+            <Search className="w-5 h-5 text-gray-600" />
+            <p className="text-gray-600 text-lg sm:text-xl">
+              Зургийг олж, үгийг хай!
+            </p>
+          </div>
           {foundWords.length === words.length && (
-            <div className="mt-4 animate-bounce">
-              <span className="text-4xl">🎉</span>
-              <p className="text-yellow-200 text-xl font-bold">
-                Баяр хүргэе! Бүх үгийг оллоо!
-              </p>
+            <div className="mt-4 p-4 bg-green-50 rounded-lg border border-green-200">
+              <div className="flex items-center justify-center gap-2">
+                <Trophy className="w-8 h-8 text-green-600 animate-pulse" />
+                <p className="text-green-800 text-xl font-bold">
+                  Баяр хүргэе! Бүх үгийг оллоо!
+                </p>
+                <Trophy className="w-8 h-8 text-green-600 animate-pulse" />
+              </div>
             </div>
           )}
         </div>
@@ -173,7 +192,7 @@ export default function WordSearchPage() {
         <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 items-start justify-center">
           {/* Game Grid */}
           <div className="flex-1 flex flex-col items-center">
-            <div className="bg-white/90 backdrop-blur-sm rounded-3xl p-4 sm:p-6 shadow-2xl">
+            <div className="bg-white rounded-xl border border-gray-200 p-4 sm:p-6 shadow-lg">
               <div
                 className="grid gap-1 sm:gap-2"
                 style={{
@@ -189,24 +208,24 @@ export default function WordSearchPage() {
                       className={`
                         flex items-center justify-center 
                         text-base sm:text-xl font-bold 
-                        border-2 border-white/50 rounded-xl 
+                        border-2 rounded-lg 
                         w-10 h-10 sm:w-12 sm:h-12 
-                        cursor-pointer shadow-lg
+                        cursor-pointer
                         transform transition-all duration-200 
                         hover:scale-110 active:scale-95
                         ${
                           cell.isFound
-                            ? "bg-gradient-to-br from-green-400 to-green-500 text-white shadow-green-300 border-green-300 animate-pulse"
+                            ? "bg-green-100 text-green-800 border-green-300 shadow-sm"
                             : ""
                         }
                         ${
                           cell.isSelected
-                            ? "bg-gradient-to-br from-blue-400 to-blue-500 text-white shadow-blue-300 border-blue-300"
+                            ? "bg-blue-100 text-blue-800 border-blue-300 shadow-sm"
                             : ""
                         }
                         ${
                           !cell.isFound && !cell.isSelected
-                            ? "bg-gradient-to-br from-white to-gray-100 text-gray-800 hover:from-purple-100 hover:to-pink-100"
+                            ? "bg-white text-gray-800 border-gray-200 hover:bg-gray-50 hover:border-gray-300 shadow-sm"
                             : ""
                         }
                       `}
@@ -221,18 +240,22 @@ export default function WordSearchPage() {
             {/* Reset Button */}
             <button
               onClick={resetGame}
-              className="mt-4 px-6 py-3 bg-green-200 text-white font-bold rounded-full shadow-lg transform transition-all duration-200 hover:scale-105 active:scale-95 hover:shadow-xl"
+              className="mt-4 flex items-center gap-2 px-6 py-3 bg-gray-900 text-white font-bold rounded-lg shadow-lg transform transition-all duration-200 hover:scale-105 active:scale-95 hover:bg-gray-800"
             >
-              🔄 Шинэ тоглоом
+              <RotateCcw className="w-5 h-5" />
+              Шинэ тоглоом
             </button>
           </div>
 
           {/* Word Images */}
           <div className="flex-1 max-w-sm">
-            <div className="bg-white/90 backdrop-blur-sm rounded-3xl p-4 sm:p-6 shadow-2xl">
-              <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4 text-center">
-                🖼️ Зургууд
-              </h2>
+            <div className="bg-white rounded-xl border border-gray-200 p-4 sm:p-6 shadow-lg">
+              <div className="flex items-center justify-center gap-2 mb-4">
+                <ImageIcon className="w-6 h-6 text-gray-700" />
+                <h2 className="text-xl sm:text-2xl font-bold text-gray-900 text-center">
+                  Зургууд
+                </h2>
+              </div>
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3 gap-3">
                 {words.map((w, index) => (
                   <div
@@ -249,12 +272,12 @@ export default function WordSearchPage() {
                   >
                     <div
                       className={`
-                      relative overflow-hidden rounded-2xl shadow-lg
-                      border-4 transition-all duration-300
+                      relative overflow-hidden rounded-lg shadow-md
+                      border-2 transition-all duration-300
                       ${
                         foundWords.includes(w.word)
-                          ? "border-green-400 shadow-green-300/50"
-                          : "border-purple-200 hover:border-purple-400"
+                          ? "border-green-300 bg-green-50"
+                          : "border-gray-200 hover:border-gray-300 bg-white"
                       }
                     `}
                     >
@@ -263,18 +286,18 @@ export default function WordSearchPage() {
                         alt={w.word}
                         width={80}
                         height={80}
-                        className="w-full h-20 object-cover transition-all duration-300 group-hover:brightness-110"
+                        className="w-full h-20 object-cover transition-all duration-300 group-hover:brightness-105"
                       />
 
                       {/* Found overlay */}
                       {foundWords.includes(w.word) && (
-                        <div className="absolute inset-0 bg-green-400/20 flex items-center justify-center animate-pulse">
-                          <span className="text-3xl animate-bounce">✅</span>
+                        <div className="absolute inset-0 bg-green-100/80 flex items-center justify-center">
+                          <CheckCircle className="w-8 h-8 text-green-600" />
                         </div>
                       )}
 
                       {/* Word overlay on hover for debugging */}
-                      <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
+                      <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
                         <span className="text-white font-bold text-sm">
                           {w.word}
                         </span>
@@ -287,14 +310,14 @@ export default function WordSearchPage() {
               {/* Progress indicator */}
               <div className="mt-4 text-center">
                 <div className="flex justify-center items-center gap-2 mb-2">
-                  <span className="text-2xl">📊</span>
+                  <BarChart3 className="w-5 h-5 text-gray-600" />
                   <span className="text-gray-700 font-semibold">
                     {foundWords.length} / {words.length}
                   </span>
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-3">
                   <div
-                    className="bg-gradient-to-r from-green-400 to-blue-500 h-3 rounded-full transition-all duration-500"
+                    className="bg-gray-900 h-3 rounded-full transition-all duration-500"
                     style={{
                       width: `${(foundWords.length / words.length) * 100}%`,
                     }}
