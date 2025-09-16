@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { Users, ArrowRight } from "lucide-react";
+import Link from "next/link";
 
 function App() {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -57,21 +58,24 @@ function App() {
           }`}
         >
           {/* Kids Button */}
-          <button className="group relative px-8 py-4 bg-gray-900 hover:bg-gray-800 text-white font-medium rounded-lg transition-all duration-300 transform hover:-translate-y-0.5 min-w-[160px] overflow-hidden">
-            <div className="flex items-center justify-center gap-2 relative z-10">
-              <span>For Kids</span>
-              <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
-            </div>
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-0 group-hover:opacity-10 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-all duration-700"></div>
-          </button>
-
-          {/* Parents Button */}
-          <button className="group relative px-8 py-4 border border-gray-300 hover:border-gray-400 text-gray-700 hover:text-gray-900 font-medium rounded-lg transition-all duration-300 transform hover:-translate-y-0.5 min-w-[160px] bg-white hover:bg-gray-50">
-            <div className="flex items-center justify-center gap-2">
-              <span>For Parents</span>
-              <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
-            </div>
-          </button>
+          <Link href="/kid">
+            <button className="group relative px-8 py-4 bg-gray-900 hover:bg-gray-800 text-white font-medium rounded-lg transition-all duration-300 transform hover:-translate-y-0.5 min-w-[160px] overflow-hidden">
+              <div className="flex items-center justify-center gap-2 relative z-10">
+                <span>For Kids</span>
+                <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
+              </div>
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-0 group-hover:opacity-10 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-all duration-700"></div>
+            </button>
+          </Link>
+          <Link href="/parent">
+            {/* Parents Button */}
+            <button className="group relative px-8 py-4 border border-gray-300 hover:border-gray-400 text-gray-700 hover:text-gray-900 font-medium rounded-lg transition-all duration-300 transform hover:-translate-y-0.5 min-w-[160px] bg-white hover:bg-gray-50">
+              <div className="flex items-center justify-center gap-2">
+                <span>For Parents</span>
+                <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
+              </div>
+            </button>
+          </Link>
         </div>
 
         {/* Subtle footer text */}
