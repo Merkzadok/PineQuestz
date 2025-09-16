@@ -8,8 +8,8 @@ export const textToSpeech = async (req: Request, res: Response) => {
     const response = await fetch("https://api.chimege.com/v1.2/synthesize", {
       method: "POST",
       headers: {
-        "Content-Type": "text/plain",
-        Token: process.env.CHIMEGE_API_KEY || "",
+        "Content-Type": "application/json",
+        Token: process.env.CHIMEGE_API_KEY!,
       },
       body: text,
     });
