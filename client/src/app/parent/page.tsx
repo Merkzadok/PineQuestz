@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Mascot } from "./components/Mascot";
 import { StatsCard } from "./components/StatsCard";
 import { ProgressRoadmap } from "./components/ProgressRoadMap";
-import { Zap, Trophy, Heart, Calendar, Award, TrendingUp } from "lucide-react";
+import { Zap, Trophy, Heart, Calendar, Award } from "lucide-react";
 import { DailyGoals } from "./components/DailyGoal";
 import { ContinueButton } from "./components/Continue";
 
@@ -107,17 +107,6 @@ const ParentPage: React.FC = () => {
           {/* Right Column - Goals & Continue */}
           <div className="space-y-6">
             <DailyGoals goals={dailyGoals} onGoalClick={handleGoalClick} />
-
-            <div className="bg-white rounded-xl border p-6 shadow-lg">
-              <ContinueButton onClick={handleContinue} />
-              <div className="mt-4 p-3 bg-gray-50 rounded-lg">
-                <p className="text-sm text-gray-600 mb-1">Дараагийн хичээл:</p>
-                <p className="font-medium text-gray-800">
-                  {lessons.find((l) => l.id === currentLesson)?.title ||
-                    "Animals"}
-                </p>
-              </div>
-            </div>
 
             {/* Additional Stats for Large Screens */}
             <div className="hidden lg:grid grid-cols-1 gap-4">

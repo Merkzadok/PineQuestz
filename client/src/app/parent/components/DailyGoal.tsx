@@ -44,7 +44,7 @@ export const DailyGoals: React.FC<DailyGoalsProps> = ({
             </div>
           </div>
           <ProgressCircle
-            progress={(goal.progress / goal.target) * 100}
+            progress={(goal.progress / 1) * 100}
             size={40}
             strokeWidth={4}
           />
