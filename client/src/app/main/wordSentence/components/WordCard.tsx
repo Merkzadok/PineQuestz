@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { WordData } from "../utils/data";
+import Image from "next/image";
+
 
 interface WordCardProps {
   wordData: WordData;
@@ -17,6 +19,7 @@ const WordCard: React.FC<WordCardProps> = ({ wordData, onNext }) => {
   const [selectedLetters, setSelectedLetters] = useState<SelectedLetter[]>([]);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const [popIndex, setPopIndex] = useState<number | null>(null);
+  
 
   useEffect(() => {
     if (popIndex !== null) {
@@ -60,11 +63,14 @@ const WordCard: React.FC<WordCardProps> = ({ wordData, onNext }) => {
   return (
     <div className="bg-white rounded-2xl shadow-xl p-6 flex flex-col items-center w-full max-w-md">
       {/* Image */}
-      <img
-        src={wordData.image}
-        alt={wordData.word}
-        className="w-64 h-64 object-contain rounded-lg mb-6 shadow"
-      />
+    
+<Image
+  src={wordData.image}
+  alt={wordData.word}
+  width={256}
+  height={256}
+  className="rounded-lg mb-6 shadow object-contain"
+/>
 
       {/* Letter buttons */}
       <div className="flex flex-wrap justify-center gap-2 mb-6">
