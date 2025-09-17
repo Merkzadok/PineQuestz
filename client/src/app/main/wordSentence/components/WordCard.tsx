@@ -14,6 +14,7 @@ const WordCard: React.FC<WordCardProps> = ({ wordData, onNext }) => {
   );
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const [popIndex, setPopIndex] = useState<number | null>(null);
+  const [showCongrats, setShowCongrats] = useState(false);
 
   useEffect(() => {
     if (popIndex !== null) {
@@ -22,37 +23,70 @@ const WordCard: React.FC<WordCardProps> = ({ wordData, onNext }) => {
     }
   }, [popIndex]);
 
-  const toggleLetter = (letter: string) => {
-    const newLetters = [...userLetters];
-
-    // давхар letter-ийг зөв тохиолдолд зөв байрлалд нэмэх
-    const firstEmpty = newLetters.indexOf(null);
-    if (firstEmpty !== -1) {
-      newLetters[firstEmpty] = letter;
-      setPopIndex(firstEmpty);
-    } else {
-      // Letter-ийг арилгах (undo)
-      const removeIdx = newLetters.indexOf(letter);
-      if (removeIdx !== -1) newLetters[removeIdx] = null;
+  useEffect(() => {
+    if (showCongrats) {
+      const timer = setTimeout(() => setShowCongrats(false), 2000);
+      return () => clearTimeout(timer);
     }
+  }, [showCongrats]);
 
-    setUserLetters(newLetters);
-  };
+const toggleLetter = (letter: string) => {
+  const newLetters = [...userLetters];
+
+  const letterCountInWord = wordData.word.split("").filter(l => l === letter).length;
+  const letterCountInUser = newLetters.filter(l => l === letter).length;
+
+  if (letterCountInUser >= letterCountInWord) {
+    const removeIdx = newLetters.lastIndexOf(letter);
+    if (removeIdx !== -1) {
+      newLetters[removeIdx] = null;
+    }
+  } else {
+    const emptyIndex = newLetters.findIndex((ch) => ch === null);
+    if (emptyIndex !== -1) {
+      newLetters[emptyIndex] = letter;
+      setPopIndex(emptyIndex);
+    }
+  }
+
+  setUserLetters(newLetters);
+};
+
 
   const checkAnswer = () => {
     const correct = userLetters.join("") === wordData.word;
     setIsCorrect(correct);
+
+    if (correct) {
+      setShowCongrats(true);
+    }
   };
 
   const handleNext = () => {
-    onNext(isCorrect === true);
+    onNext(true);
+    resetState();
+  };
+
+  const handleRetry = () => {
+    onNext(false);
+    resetState();
+  };
+
+  const resetState = () => {
     setUserLetters(Array(wordData.word.length).fill(null));
     setIsCorrect(null);
     setPopIndex(null);
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-xl p-6 flex flex-col items-center">
+    <div className="relative bg-white rounded-2xl shadow-xl p-6 flex flex-col items-center">
+      {/* Congrats Popup */}
+      {showCongrats && (
+        <div className="absolute top-8 bg-green-500 text-white text-2xl font-bold px-6 py-3 rounded-xl shadow-lg animate-bounce">
+          🎉 Баяр хүргэе! 🎉
+        </div>
+      )}
+
       {/* Image */}
       {wordData.image && (
         <img
@@ -64,23 +98,15 @@ const WordCard: React.FC<WordCardProps> = ({ wordData, onNext }) => {
 
       {/* Letters Buttons */}
       <div className="flex flex-wrap justify-center gap-2 mb-6">
-        {wordData.letters.map((letter, idx) => {
-          const selectedIdx = userLetters.indexOf(letter);
-          let bg = "bg-gray-200 hover:bg-gray-300";
-
-          // зөв дарагдсан бол ногоон
-          if (selectedIdx !== -1 && letter === wordData.word[selectedIdx]) bg = "bg-green-400 text-white";
-
-          return (
-            <button
-              key={idx}
-              onClick={() => toggleLetter(letter)}
-              className={`w-12 h-12 flex items-center justify-center border rounded-xl font-medium transition-colors ${bg}`}
-            >
-              {letter}
-            </button>
-          );
-        })}
+        {wordData.letters.map((letter, idx) => (
+          <button
+            key={idx}
+            onClick={() => toggleLetter(letter)}
+            className="w-12 h-12 flex items-center justify-center border rounded-xl font-medium bg-gray-200 hover:bg-gray-300 transition-colors"
+          >
+            {letter}
+          </button>
+        ))}
       </div>
 
       {/* Selected Letters Display */}
@@ -88,13 +114,16 @@ const WordCard: React.FC<WordCardProps> = ({ wordData, onNext }) => {
         {userLetters.map((letter, idx) => {
           let bg = "bg-gray-100 text-gray-700";
           if (letter) {
-            bg = letter === wordData.word[idx] ? "bg-green-200 text-green-800" : "bg-red-200 text-red-800";
+            bg =
+              letter === wordData.word[idx]
+                ? "bg-green-200 text-green-800"
+                : "bg-red-200 text-red-800";
           }
 
           return (
             <span
               key={idx}
-              className={`inline-block w-12 h-12 flex items-center justify-center text-2xl font-bold rounded-lg transition-all duration-200 transform ${
+              className={`w-12 h-12 flex items-center justify-center text-2xl font-bold rounded-lg transition-all duration-200 transform ${
                 popIndex === idx ? "scale-125" : "scale-100"
               } ${bg}`}
             >
@@ -115,12 +144,21 @@ const WordCard: React.FC<WordCardProps> = ({ wordData, onNext }) => {
           </button>
         )}
 
-        {isCorrect !== null && (
+        {isCorrect === true && (
           <button
             onClick={handleNext}
             className="px-6 py-3 bg-yellow-400 text-black rounded-full hover:bg-yellow-500 transition shadow-lg text-xl font-bold"
           >
             Дараах
+          </button>
+        )}
+
+        {isCorrect === false && (
+          <button
+            onClick={handleRetry}
+            className="px-6 py-3 bg-red-400 text-white rounded-full hover:bg-red-500 transition shadow-lg text-xl font-bold"
+          >
+            Дахин оролдох
           </button>
         )}
       </div>
