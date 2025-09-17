@@ -311,9 +311,20 @@ export default function CrossWordLevel1() {
                         height={80}
                         className="w-full h-20 object-cover transition-all duration-300 group-hover:brightness-105"
                       />
+
+                      {/* Found overlay */}
                       {foundWords.includes(w.word) && (
                         <div className="absolute inset-0 bg-green-100/80 flex items-center justify-center">
                           <CheckCircle className="w-8 h-8 text-green-600" />
+                        </div>
+                      )}
+
+                      {/* Hover overlay to show word */}
+                      {!foundWords.includes(w.word) && (
+                        <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
+                          <span className="text-white font-bold text-sm">
+                            {w.word}
+                          </span>
                         </div>
                       )}
                     </div>
