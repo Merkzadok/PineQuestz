@@ -8,8 +8,8 @@ const MainHeader = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navLinks = [
-    { name: "Home", href: "/main" },
-    { name: "Reading", href: "/reading" },
+    { name: "Home", href: "/" },
+    { name: "Reading", href: "/main/wordSentence" },
   ];
 
   return (
@@ -17,7 +17,7 @@ const MainHeader = () => {
       <div className="max-w-6xl mx-auto px-6">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href="/main">
+          <Link href="/">
             <div className="flex items-center gap-3 cursor-pointer">
               <div className="flex items-center justify-center w-8 h-8 bg-gray-100 rounded-lg">
                 <Users className="w-5 h-5 text-gray-700" />
