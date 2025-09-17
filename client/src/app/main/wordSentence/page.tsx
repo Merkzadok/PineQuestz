@@ -29,12 +29,18 @@ export default function Home() {
   if (currentIndex >= words.length)
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-blue-100 to-blue-50 px-4">
-        <p className="text-3xl font-bold mb-4 text-green-600">🎉 Тоглолт дууслаа!</p>
+        <p className="text-3xl font-bold mb-4 text-green-600">
+          🎉 Тоглолт дууслаа!
+        </p>
         <p className="text-xl text-gray-700">
-          Таны Streak: <span className="font-semibold text-green-600">{streak}</span>
+          Таны Streak:{" "}
+          <span className="font-semibold text-green-600">{streak}</span>
         </p>
         <button
-          onClick={() => { setCurrentIndex(0); setStreak(0); }}
+          onClick={() => {
+            setCurrentIndex(0);
+            setStreak(0);
+          }}
           className="mt-6 px-6 py-2 bg-green-500 text-white rounded-full hover:bg-green-600 shadow-lg transition"
         >
           Дахин эхлэх
@@ -42,7 +48,7 @@ export default function Home() {
       </div>
     );
 
-  const progressPercent = ((currentIndex) / words.length) * 100;
+  const progressPercent = (currentIndex / words.length) * 100;
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-100 to-blue-50 flex flex-col items-center justify-start px-4 pt-8">
@@ -80,4 +86,3 @@ const shuffleArray = <T,>(arr: T[]): T[] => {
     .sort((a, b) => a.sort - b.sort)
     .map(({ v }) => v);
 };
-
