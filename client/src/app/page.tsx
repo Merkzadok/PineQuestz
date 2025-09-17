@@ -47,8 +47,7 @@ function App() {
             isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
           }`}
         >
-          A thoughtfully designed digital space where families connect, explore,
-          and grow together.
+          "Where learning to read becomes the best part of your child's day."
         </p>
 
         {/* Action Buttons */}
@@ -77,15 +76,6 @@ function App() {
             </button>
           </Link>
         </div>
-
-        {/* Subtle footer text */}
-        <p
-          className={`text-gray-400 text-sm mt-12 font-light transition-all duration-1000 delay-1200 ${
-            isLoaded ? "opacity-100" : "opacity-0"
-          }`}
-        >
-          Choose your experience to begin
-        </p>
 
         {/* Minimal decorative elements */}
         <div className="absolute top-1/4 left-8 w-1 h-16 bg-gradient-to-b from-transparent via-gray-200 to-transparent opacity-40"></div>
