@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { words as allWords, WordData } from "../utils/data";
-import { AudioRecorder } from "./AudioRecorder";
+import  AudioRecorder  from "./AudioRecorder";
 
 interface Level {
   id: number;
@@ -154,7 +154,7 @@ const WordCard: React.FC<WordCardProps> = ({ wordData, onCorrect }) => {
         </button>
       </div>
 
-      <AudioRecorder correctWord={wordData.word} />
+      <AudioRecorder  />
     </div>
   );
 };
