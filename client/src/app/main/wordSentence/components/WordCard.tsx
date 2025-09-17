@@ -10,7 +10,7 @@ interface WordCardProps {
 
 const WordCard: React.FC<WordCardProps> = ({ wordData, onNext }) => {
   const [userLetters, setUserLetters] = useState<(string | null)[]>(
-    Array(wordData.word.length).fill(null)
+    Array(wordData.letters.length).fill(null)
   );
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const [popIndex, setPopIndex] = useState<number | null>(null);
@@ -30,31 +30,37 @@ const WordCard: React.FC<WordCardProps> = ({ wordData, onNext }) => {
     }
   }, [showCongrats]);
 
-const toggleLetter = (letter: string) => {
-  const newLetters = [...userLetters];
+  // letters солигдох бүрт уртыг тохируулах
+  useEffect(() => {
+    setUserLetters(Array(wordData.letters.length).fill(null));
+  }, [wordData]);
 
-  const letterCountInWord = wordData.word.split("").filter(l => l === letter).length;
-  const letterCountInUser = newLetters.filter(l => l === letter).length;
+  const toggleLetter = (letter: string) => {
+    const newLetters = [...userLetters];
 
-  if (letterCountInUser >= letterCountInWord) {
-    const removeIdx = newLetters.lastIndexOf(letter);
-    if (removeIdx !== -1) {
-      newLetters[removeIdx] = null;
+    const letterCountInWord = wordData.word.split("").filter(l => l === letter).length;
+    const letterCountInUser = newLetters.filter(l => l === letter).length;
+
+    if (letterCountInUser >= letterCountInWord) {
+      const removeIdx = newLetters.lastIndexOf(letter);
+      if (removeIdx !== -1) {
+        newLetters[removeIdx] = null;
+      }
+    } else {
+      const emptyIndex = newLetters.findIndex((ch) => ch === null);
+      if (emptyIndex !== -1) {
+        newLetters[emptyIndex] = letter;
+        setPopIndex(emptyIndex);
+      }
     }
-  } else {
-    const emptyIndex = newLetters.findIndex((ch) => ch === null);
-    if (emptyIndex !== -1) {
-      newLetters[emptyIndex] = letter;
-      setPopIndex(emptyIndex);
-    }
-  }
 
-  setUserLetters(newLetters);
-};
-
+    setUserLetters(newLetters);
+  };
 
   const checkAnswer = () => {
-    const correct = userLetters.join("") === wordData.word;
+    // зөвхөн эхний n үсгийг шалгах (n = word урт)
+    const correct =
+      userLetters.slice(0, wordData.word.length).join("") === wordData.word;
     setIsCorrect(correct);
 
     if (correct) {
@@ -73,7 +79,7 @@ const toggleLetter = (letter: string) => {
   };
 
   const resetState = () => {
-    setUserLetters(Array(wordData.word.length).fill(null));
+    setUserLetters(Array(wordData.letters.length).fill(null));
     setIsCorrect(null);
     setPopIndex(null);
   };
@@ -115,7 +121,7 @@ const toggleLetter = (letter: string) => {
           let bg = "bg-gray-100 text-gray-700";
           if (letter) {
             bg =
-              letter === wordData.word[idx]
+              wordData.word[idx] && letter === wordData.word[idx]
                 ? "bg-green-200 text-green-800"
                 : "bg-red-200 text-red-800";
           }
@@ -127,7 +133,7 @@ const toggleLetter = (letter: string) => {
                 popIndex === idx ? "scale-125" : "scale-100"
               } ${bg}`}
             >
-              {letter || ""}
+              {letter}
             </span>
           );
         })}
