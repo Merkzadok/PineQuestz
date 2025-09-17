@@ -86,7 +86,7 @@ const ParentPage: React.FC = () => {
             <Mascot mood="happy" size="medium" />
             <div>
               <h1 className="text-2xl font-bold text-gray-800">
-                Your Child's Progress Today
+                Your Child&apos;s Progress Today
               </h1>
               <p className="text-gray-600">
                 Track learning activities and achievements
