@@ -133,7 +133,7 @@ const ParentPage: React.FC = () => {
             <div className="bg-white rounded-xl border p-6 shadow-lg">
               <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
                 <Calendar className="w-5 h-5 text-blue-500" />
-                Today's Activities
+                Today&apos;s Activities
               </h2>
               <div className="space-y-4">
                 {todaysActivities.map((activity, index) => (
@@ -179,7 +179,7 @@ const ParentPage: React.FC = () => {
             <div className="bg-white rounded-xl border p-6 shadow-lg">
               <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
                 <Star className="w-5 h-5 text-yellow-500" />
-                This Week's Summary
+                This Week&apos;s Summary
               </h2>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div className="text-center p-4 bg-blue-50 rounded-lg">
