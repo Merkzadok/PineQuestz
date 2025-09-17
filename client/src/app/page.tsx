@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { Users, ArrowRight } from "lucide-react";
 import Link from "next/link";
 
-function App() {
+const Page = () => {
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
@@ -91,6 +91,6 @@ function App() {
       </div>
     </div>
   );
-}
+};
 
-export default App;
+export default Page;
