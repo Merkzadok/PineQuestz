@@ -1,6 +1,8 @@
 "use client";
+
 import Image from "next/image";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import {
   Target,
   Search,
@@ -21,14 +23,14 @@ type Cell = {
 
 type Word = {
   word: string;
-  image: string; // path to image in /public/images
+  image: string;
 };
 
 export default function CrossWordLevel1() {
+  const router = useRouter();
   const rows = 6;
   const cols = 6;
 
-  // Mongolian words + images
   const words: Word[] = [
     { word: "сүx", image: "/images/axe.avif" },
     { word: "ном", image: "/images/book.jpeg" },
@@ -45,12 +47,12 @@ export default function CrossWordLevel1() {
   const [selectedCells, setSelectedCells] = useState<[number, number][]>([]);
   const [foundWords, setFoundWords] = useState<string[]>([]);
   const [activeWords, setActiveWords] = useState<Word[]>([]);
+
   function getRandomWords(list: Word[], count: number): Word[] {
     const shuffled = [...list].sort(() => 0.5 - Math.random());
     return shuffled.slice(0, count);
   }
 
-  // Generate grid on mount
   useEffect(() => {
     const selected = getRandomWords(words, 5);
     setActiveWords(selected);
@@ -64,7 +66,7 @@ export default function CrossWordLevel1() {
   }, []);
 
   function generateGrid(r: number, c: number, wordList: string[]): Cell[][] {
-    const letters = "масрхвлншэиоуөү"; // allowed letters
+    const letters = "масрхвлншэиоуөү";
     const grid: Cell[][] = Array.from({ length: r }, () =>
       Array.from({ length: c }, () => ({
         letter: "",
@@ -73,7 +75,6 @@ export default function CrossWordLevel1() {
       }))
     );
 
-    // Place words horizontally (simple for now)
     wordList.forEach((word, idx) => {
       let placed = false;
       while (!placed) {
@@ -105,7 +106,6 @@ export default function CrossWordLevel1() {
       }
     });
 
-    // Fill remaining with random Mongolian letters
     for (let rIdx = 0; rIdx < r; rIdx++) {
       for (let cIdx = 0; cIdx < c; cIdx++) {
         if (!grid[rIdx][cIdx].letter) {
@@ -171,8 +171,16 @@ export default function CrossWordLevel1() {
     );
   };
 
-  const speakText = useTextSpeaker();
+  const handleContinue = () => {
+    // Save progress to localStorage
+    localStorage.setItem("level1", "completed");
+    localStorage.setItem("level1-stars", "3");
 
+    // Redirect back to roadmap
+    router.push("/roadmap");
+  };
+
+  const speakText = useTextSpeaker();
   const text = "Зургийг олж, үгийг хай!";
 
   return (
@@ -190,17 +198,28 @@ export default function CrossWordLevel1() {
           <div className="flex items-center justify-center gap-2">
             <Search className="w-5 h-5 text-gray-600" />
             <p className="text-gray-600 text-lg sm:text-xl">{text}</p>
-            {/* <button onClick={() => speakText(text)}>Click</button> */}
           </div>
+
+          {/* Completion Message */}
           {activeWords.length > 0 &&
             foundWords.length === activeWords.length && (
               <div className="mt-4 p-4 bg-green-50 rounded-lg border border-green-200">
-                <div className="flex items-center justify-center gap-2">
-                  <Trophy className="w-8 h-8 text-green-600 animate-pulse" />
-                  <p className="text-green-800 text-xl font-bold">
-                    Баяр хүргэе! Бүх үгийг оллоо!
-                  </p>
-                  <Trophy className="w-8 h-8 text-green-600 animate-pulse" />
+                <div className="flex flex-col items-center justify-center gap-2">
+                  <div className="flex items-center gap-2">
+                    <Trophy className="w-8 h-8 text-green-600 animate-pulse" />
+                    <p className="text-green-800 text-xl font-bold">
+                      Баяр хүргэе! Бүх үгийг оллоо!
+                    </p>
+                    <Trophy className="w-8 h-8 text-green-600 animate-pulse" />
+                  </div>
+
+                  {/* Continue Button */}
+                  <button
+                    onClick={handleContinue}
+                    className="mt-4 px-6 py-3 bg-gray-900 text-white font-bold rounded-lg shadow-lg transform transition-all duration-200 hover:scale-105 active:scale-95 hover:bg-gray-800"
+                  >
+                    Continue
+                  </button>
                 </div>
               </div>
             )}
@@ -223,13 +242,8 @@ export default function CrossWordLevel1() {
                       key={`${rIdx}-${cIdx}`}
                       onClick={() => toggleCell(rIdx, cIdx)}
                       className={`
-                        flex items-center justify-center 
-                        text-base sm:text-xl font-bold 
-                        border-2 rounded-lg 
-                        w-10 h-10 sm:w-12 sm:h-12 
-                        cursor-pointer
-                        transform transition-all duration-200 
-                        hover:scale-110 active:scale-95
+                        flex items-center justify-center text-base sm:text-xl font-bold border-2 rounded-lg w-10 h-10 sm:w-12 sm:h-12 cursor-pointer
+                        transform transition-all duration-200 hover:scale-110 active:scale-95
                         ${
                           cell.isFound
                             ? "bg-green-100 text-green-800 border-green-300 shadow-sm"
@@ -252,16 +266,16 @@ export default function CrossWordLevel1() {
                   ))
                 )}
               </div>
-            </div>
 
-            {/* Reset Button */}
-            <button
-              onClick={resetGame}
-              className="mt-4 flex items-center gap-2 px-6 py-3 bg-gray-900 text-white font-bold rounded-lg shadow-lg transform transition-all duration-200 hover:scale-105 active:scale-95 hover:bg-gray-800"
-            >
-              <RotateCcw className="w-5 h-5" />
-              Шинэ тоглоом
-            </button>
+              {/* Reset Button */}
+              <button
+                onClick={resetGame}
+                className="mt-4 flex items-center gap-2 px-6 py-3 bg-gray-900 text-white font-bold rounded-lg shadow-lg transform transition-all duration-200 hover:scale-105 active:scale-95 hover:bg-gray-800"
+              >
+                <RotateCcw className="w-5 h-5" />
+                Шинэ тоглоом
+              </button>
+            </div>
           </div>
 
           {/* Word Images */}
@@ -274,29 +288,21 @@ export default function CrossWordLevel1() {
                 </h2>
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3 gap-3">
-                {activeWords.map((w, index) => (
+                {activeWords.map((w) => (
                   <div
                     key={w.word}
-                    className={`
-                      relative group cursor-pointer
-                      transform transition-all duration-300
-                      ${
-                        foundWords.includes(w.word)
-                          ? "scale-105"
-                          : "hover:scale-110"
-                      }
-                    `}
+                    className={`relative group cursor-pointer transform transition-all duration-300 ${
+                      foundWords.includes(w.word)
+                        ? "scale-105"
+                        : "hover:scale-110"
+                    }`}
                   >
                     <div
-                      className={`
-                      relative overflow-hidden rounded-lg shadow-md
-                      border-2 transition-all duration-300
-                      ${
+                      className={`relative overflow-hidden rounded-lg shadow-md border-2 transition-all duration-300 ${
                         foundWords.includes(w.word)
                           ? "border-green-300 bg-green-50"
                           : "border-gray-200 hover:border-gray-300 bg-white"
-                      }
-                    `}
+                      }`}
                     >
                       <Image
                         src={w.image}
@@ -305,26 +311,17 @@ export default function CrossWordLevel1() {
                         height={80}
                         className="w-full h-20 object-cover transition-all duration-300 group-hover:brightness-105"
                       />
-
-                      {/* Found overlay */}
                       {foundWords.includes(w.word) && (
                         <div className="absolute inset-0 bg-green-100/80 flex items-center justify-center">
                           <CheckCircle className="w-8 h-8 text-green-600" />
                         </div>
                       )}
-
-                      {/* Word overlay on hover for debugging */}
-                      <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
-                        <span className="text-white font-bold text-sm">
-                          {w.word}
-                        </span>
-                      </div>
                     </div>
                   </div>
                 ))}
               </div>
 
-              {/* Progress indicator */}
+              {/* Progress Bar */}
               <div className="mt-4 text-center">
                 <div className="flex justify-center items-center gap-2 mb-2">
                   <BarChart3 className="w-5 h-5 text-gray-600" />
@@ -340,7 +337,7 @@ export default function CrossWordLevel1() {
                         (foundWords.length / activeWords.length) * 100
                       }%`,
                     }}
-                  ></div>
+                  />
                 </div>
               </div>
             </div>

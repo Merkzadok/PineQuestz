@@ -1,47 +1,72 @@
 "use client";
+
 import React, { useEffect, useState } from "react";
-import { Star, Lock, CheckCircle, Circle } from "lucide-react";
+import { Lock, CheckCircle, Circle } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 interface Level {
   id: number;
-  status: "completed" | "current" | "locked";
-  stars: number;
+  route: string;
 }
 
-function App() {
+interface LessonProgress {
+  levelId: number;
+  completed: boolean;
+}
+
+export default function RoadMap() {
+  const router = useRouter();
   const [isLoaded, setIsLoaded] = useState(false);
-  const [levels, setLevels] = useState<Level[]>([
-    { id: 1, status: "completed", stars: 3 },
-    { id: 2, status: "completed", stars: 2 },
-    { id: 3, status: "current", stars: 0 },
-    { id: 4, status: "locked", stars: 0 },
-    { id: 5, status: "locked", stars: 0 },
-  ]);
+
+  // Define levels and their game routes
+  const levels: Level[] = [
+    { id: 1, route: "/main/crossword/1" },
+    { id: 2, route: "/main/crossword/2" },
+    { id: 3, route: "/main/wordSentence" },
+  ];
+
+  // Load progress from localStorage or fallback
+  const [lessonProgress, setLessonProgress] = useState<LessonProgress[]>(
+    levels.map((level) => ({
+      levelId: level.id,
+      completed: false,
+    }))
+  );
 
   useEffect(() => {
     setIsLoaded(true);
+
+    // Load stored progress
+    const savedProgress = levels.map((level) => {
+      const completed =
+        localStorage.getItem(`level${level.id}`) === "completed";
+      return { levelId: level.id, completed };
+    });
+    setLessonProgress(savedProgress);
   }, []);
 
-  const handleLevelClick = (levelId: number) => {
-    const level = levels.find((l) => l.id === levelId);
-    if (level && level.status !== "locked") {
-      console.log(`Starting level ${levelId}`);
-    }
+  const getLevelStatus = (level: Level) => {
+    const prevLevel = levels[level.id - 2]; // previous level
+    const prevCompleted = prevLevel
+      ? lessonProgress.find((l) => l.levelId === prevLevel.id)?.completed
+      : true; // first level always unlocked
+
+    const currentProgress = lessonProgress.find((l) => l.levelId === level.id);
+
+    if (!prevCompleted) return "locked";
+    if (currentProgress?.completed) return "completed";
+    return "current";
   };
 
-  const renderStars = (count: number) => {
-    return Array.from({ length: 3 }, (_, i) => (
-      <Star
-        key={i}
-        className={`w-3 h-3 ${
-          i < count ? "text-gray-800 fill-gray-800" : "text-gray-300"
-        }`}
-      />
-    ));
+  const handleLevelClick = (level: Level) => {
+    const status = getLevelStatus(level);
+    if (status === "locked") return;
+
+    router.push(level.route);
   };
 
-  const getLevelIcon = (level: Level) => {
-    switch (level.status) {
+  const getLevelIcon = (status: string) => {
+    switch (status) {
       case "completed":
         return <CheckCircle className="w-6 h-6 text-gray-800" />;
       case "current":
@@ -51,11 +76,11 @@ function App() {
     }
   };
 
-  const getLevelStyles = (level: Level) => {
+  const getLevelStyles = (status: string) => {
     const baseStyles =
       "relative w-16 h-16 rounded-full border-2 flex items-center justify-center transition-all duration-300 cursor-pointer";
 
-    switch (level.status) {
+    switch (status) {
       case "completed":
         return `${baseStyles} bg-white border-gray-800 hover:scale-110 hover:shadow-lg`;
       case "current":
@@ -82,16 +107,16 @@ function App() {
           </p>
         </div>
 
-        {/* Roadmap Path */}
+        {/* Roadmap */}
         <div className="relative">
           {/* Connecting Lines */}
           <div className="absolute left-1/2 top-8 bottom-8 w-0.5 bg-gray-300 transform -translate-x-px">
-            {/* Progress Line */}
             <div
               className="absolute top-0 left-0 w-full bg-gray-800 transition-all duration-1000 ease-out"
               style={{
                 height: `${
-                  ((levels.findIndex((l) => l.status === "current") + 1) /
+                  ((levels.findIndex((l) => getLevelStatus(l) === "current") +
+                    1) /
                     levels.length) *
                   100
                 }%`,
@@ -101,72 +126,60 @@ function App() {
 
           {/* Level Nodes */}
           <div className="space-y-8">
-            {levels.map((level, index) => (
-              <div
-                key={level.id}
-                className={`flex items-center transition-all duration-500 ${
-                  isLoaded
-                    ? "opacity-100 translate-x-0"
-                    : "opacity-0 translate-x-8"
-                }`}
-                style={{ transitionDelay: `${index * 200}ms` }}
-              >
-                {/* Level Number and Icon */}
-                <div className="flex items-center w-full">
-                  {/* Left side - Level info for odd levels */}
-                  {index % 2 === 0 && (
-                    <div className="flex-1 text-right pr-6">
-                      <div className="inline-block text-right">
-                        <h3 className="text-lg font-semibold text-gray-800">
-                          Level {level.id}
-                        </h3>
-                        {level.status === "completed" && (
-                          <div className="flex justify-end gap-1 mt-1">
-                            {renderStars(level.stars)}
-                          </div>
-                        )}
+            {levels.map((level, index) => {
+              const status = getLevelStatus(level);
+
+              return (
+                <div
+                  key={level.id}
+                  className={`flex items-center transition-all duration-500 ${
+                    isLoaded
+                      ? "opacity-100 translate-x-0"
+                      : "opacity-0 translate-x-8"
+                  }`}
+                  style={{ transitionDelay: `${index * 200}ms` }}
+                >
+                  <div className="flex items-center w-full">
+                    {index % 2 === 0 && (
+                      <div className="flex-1 text-right pr-6">
+                        <div className="inline-block text-right">
+                          <h3 className="text-lg font-semibold text-gray-800">
+                            Level {level.id}
+                          </h3>
+                        </div>
                       </div>
+                    )}
+
+                    <div className="relative z-10">
+                      <button
+                        onClick={() => handleLevelClick(level)}
+                        className={getLevelStyles(status)}
+                        disabled={status === "locked"}
+                      >
+                        {status === "current" ? (
+                          <span className="text-xl font-bold">{level.id}</span>
+                        ) : (
+                          getLevelIcon(status)
+                        )}
+                        {status === "current" && (
+                          <div className="absolute inset-0 rounded-full bg-gray-800 opacity-20 animate-ping" />
+                        )}
+                      </button>
                     </div>
-                  )}
 
-                  {/* Center - Level Button */}
-                  <div className="relative z-10">
-                    <button
-                      onClick={() => handleLevelClick(level.id)}
-                      className={getLevelStyles(level)}
-                      disabled={level.status === "locked"}
-                    >
-                      {level.status === "current" ? (
-                        <span className="text-xl font-bold">{level.id}</span>
-                      ) : (
-                        getLevelIcon(level)
-                      )}
-
-                      {/* Glow effect for current level */}
-                      {level.status === "current" && (
-                        <div className="absolute inset-0 rounded-full bg-gray-800 opacity-20 animate-ping" />
-                      )}
-                    </button>
+                    {index % 2 === 1 && (
+                      <div className="flex-1 pl-6">
+                        <div className="inline-block">
+                          <h3 className="text-lg font-semibold text-gray-800">
+                            Level {level.id}
+                          </h3>
+                        </div>
+                      </div>
+                    )}
                   </div>
-
-                  {/* Right side - Level info for even levels */}
-                  {index % 2 === 1 && (
-                    <div className="flex-1 pl-6">
-                      <div className="inline-block">
-                        <h3 className="text-lg font-semibold text-gray-800">
-                          Level {level.id}
-                        </h3>
-                        {level.status === "completed" && (
-                          <div className="flex gap-1 mt-1">
-                            {renderStars(level.stars)}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  )}
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
 
@@ -179,21 +192,15 @@ function App() {
           <div className="flex justify-center gap-8 text-sm text-gray-600">
             <div>
               <span className="font-semibold text-gray-800">
-                {levels.filter((l) => l.status === "completed").length}
+                {lessonProgress.filter((l) => l.completed).length}
               </span>
               <span className="ml-1">Completed</span>
             </div>
             <div>
               <span className="font-semibold text-gray-800">
-                {levels.reduce((sum, l) => sum + l.stars, 0)}
+                {lessonProgress.filter((l) => !l.completed).length}
               </span>
-              <span className="ml-1">Stars</span>
-            </div>
-            <div>
-              <span className="font-semibold text-gray-800">
-                {levels.filter((l) => l.status === "locked").length}
-              </span>
-              <span className="ml-1">Locked</span>
+              <span className="ml-1">Remaining</span>
             </div>
           </div>
         </div>
@@ -201,5 +208,3 @@ function App() {
     </div>
   );
 }
-
-export default App;

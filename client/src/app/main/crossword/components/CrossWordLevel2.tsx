@@ -10,6 +10,7 @@ import {
   ImageIcon,
   BarChart3,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 type Cell = {
   letter: string;
@@ -169,6 +170,13 @@ export default function CrossWordLevel2() {
       )
     );
   };
+  const router = useRouter();
+  const handleContinue = () => {
+    // Save level progress in localStorage
+    localStorage.setItem("level2", "completed");
+    // Redirect to roadmap page
+    router.push("/roadmap");
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 p-4 sm:p-6">
@@ -190,14 +198,22 @@ export default function CrossWordLevel2() {
           </div>
           {activeWords.length > 0 &&
             foundWords.length === activeWords.length && (
-              <div className="mt-4 p-4 bg-green-50 rounded-lg border border-green-200">
-                <div className="flex items-center justify-center gap-2">
+              <div className="mt-4 p-4 bg-green-50 rounded-lg border border-green-200 flex flex-col items-center">
+                <div className="flex items-center gap-2 mb-4">
                   <Trophy className="w-8 h-8 text-green-600 animate-pulse" />
                   <p className="text-green-800 text-xl font-bold">
                     Баяр хүргэе! Бүх үгийг оллоо!
                   </p>
                   <Trophy className="w-8 h-8 text-green-600 animate-pulse" />
                 </div>
+
+                {/* Continue Button at bottom */}
+                <button
+                  onClick={handleContinue}
+                  className="px-6 py-3 bg-gray-900 text-white font-bold rounded-lg shadow-lg transform transition-all duration-200 hover:scale-105 active:scale-95 hover:bg-gray-800"
+                >
+                  Continue
+                </button>
               </div>
             )}
         </div>
