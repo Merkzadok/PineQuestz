@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+
 import {
   Target,
   Search,
@@ -13,6 +14,7 @@ import {
   BarChart3,
 } from "lucide-react";
 import { useTextSpeaker } from "@/provider/TextContext";
+import { playAudioDemo } from "@/app/utils/Demospeak";
 
 type Cell = {
   letter: string;
