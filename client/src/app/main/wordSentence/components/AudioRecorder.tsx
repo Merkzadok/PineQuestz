@@ -1,42 +1,36 @@
 "use client";
-
 import { useState, useRef } from "react";
 
-export default function AudioRecorder() {
+interface Props {
+  correctWord: string;
+}
+
+export const AudioRecorder: React.FC<Props> = ({ correctWord }) => {
   const [recording, setRecording] = useState(false);
-  const [transcript, setTranscript] = useState<string | null>(null);
+  const [result, setResult] = useState<string>("");
+  const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
+
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-  const audioChunks = useRef<Blob[]>([]);
+  const audioChunksRef = useRef<Blob[]>([]);
 
   const startRecording = async () => {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      alert("Таны браузер микрофон дэмжихгүй байна");
+      return;
+    }
+
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
     const mediaRecorder = new MediaRecorder(stream);
-
     mediaRecorderRef.current = mediaRecorder;
-    audioChunks.current = [];
+    audioChunksRef.current = [];
 
-    mediaRecorder.ondataavailable = (event) => {
-      if (event.data.size > 0) {
-        audioChunks.current.push(event.data);
-      }
+    mediaRecorder.ondataavailable = (e) => {
+      if (e.data.size > 0) audioChunksRef.current.push(e.data);
     };
 
     mediaRecorder.onstop = async () => {
-      const audioBlob = new Blob(audioChunks.current, { type: "audio/webm" });
-      const formData = new FormData();
-      formData.append("file", audioBlob, "recording.webm");
-
-      const res = await fetch("/api/transcribe", {
-        method: "POST",
-        body: formData,
-      });
-
-      const data = await res.json();
-      if (data.text) {
-        setTranscript(data.text);
-      } else {
-        setTranscript("⚠️ Алдаа гарлаа");
-      }
+      const audioBlob = new Blob(audioChunksRef.current, { type: "audio/webm" });
+      await sendToWhisper(audioBlob);
     };
 
     mediaRecorder.start();
@@ -44,30 +38,53 @@ export default function AudioRecorder() {
   };
 
   const stopRecording = () => {
-    if (mediaRecorderRef.current) {
-      mediaRecorderRef.current.stop();
-    }
+    mediaRecorderRef.current?.stop();
     setRecording(false);
   };
 
-  return (
-    <div className="p-6 flex flex-col gap-4 items-center">
-      <h2 className="text-xl font-bold">🎤 Дуу бичлэг → Whisper API</h2>
+  const sendToWhisper = async (audioBlob: Blob) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(audioBlob);
+    reader.onloadend = async () => {
+      const base64 = reader.result!.toString().split(",")[1];
 
+      try {
+     const res = await fetch("/api/whisper", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ audio: base64 }), // base64 from recorded blob
+});
+
+
+     const data = await res.json();
+const spokenText = (data.text || "").trim().toLowerCase();
+setResult(spokenText);
+setIsCorrect(spokenText === correctWord.toLowerCase());
+      } catch (err) {
+        console.error(err);
+        alert("Whisper API руу дамжуулахад алдаа гарлаа");
+      }
+    };
+  };
+
+  return (
+    <div className="mt-4">
       <button
         onClick={recording ? stopRecording : startRecording}
-        className={`px-6 py-3 rounded-full text-white font-bold ${
-          recording ? "bg-red-500 hover:bg-red-600" : "bg-green-500 hover:bg-green-600"
-        }`}
+        className={`p-2 rounded ${recording ? "bg-red-500" : "bg-blue-500"} text-white`}
       >
-        {recording ? "⏹ Бичлэг зогсоох" : "🎙 Бичлэг эхлүүлэх"}
+        {recording ? "Бичиж байна..." : "Микрофоноор унших"}
       </button>
 
-      {transcript && (
-        <div className="mt-4 bg-gray-100 p-4 rounded-lg w-full max-w-md text-center">
-          <p className="text-lg font-medium">📝 Танил текст:</p>
-          <p className="text-xl font-bold text-green-700">{transcript}</p>
-        </div>
+      {result && (
+        <p className="mt-2">
+          Танилцуулсан үг: <strong>{result}</strong>
+          {isCorrect !== null && (
+            <span className={isCorrect ? "text-green-600" : "text-red-600"}>
+              {isCorrect ? " (Зөв!)" : " (Буруу!)"}
+            </span>
+          )}
+        </p>
       )}
     </div>
   );
