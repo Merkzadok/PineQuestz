@@ -47,7 +47,8 @@ function App() {
             isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
           }`}
         >
-          "Where learning to read becomes the best part of your child's day."
+          "Where learning to read becomes the best part of your child&apos;s
+          day."
         </p>
 
         {/* Action Buttons */}
