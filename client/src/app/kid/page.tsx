@@ -102,13 +102,13 @@ const KidPage: React.FC = () => {
         </button>
 
         {/* Games Button */}
-        <button
+        {/* <button
           onClick={handleGames}
           className="w-full bg-card hover:bg-accent text-foreground border rounded-lg p-6 shadow-md hover:shadow-lg transform hover:scale-[1.02] transition-all duration-200 flex items-center justify-center gap-4"
         >
           <Gamepad2 className="w-8 h-8" />
           <span className="text-xl font-semibold">GAMES</span>
-        </button>
+        </button> */}
 
         {/* Stickers Button */}
         <button
@@ -116,7 +116,7 @@ const KidPage: React.FC = () => {
           className="w-full bg-card hover:bg-accent text-foreground border rounded-lg p-6 shadow-md hover:shadow-lg transform hover:scale-[1.02] transition-all duration-200 flex items-center justify-center gap-4"
         >
           <Sparkles className="w-8 h-8" />
-          <span className="text-xl font-semibold">STICKERS</span>
+          <span className="text-xl font-semibold">Rewards</span>
         </button>
       </div>
 
