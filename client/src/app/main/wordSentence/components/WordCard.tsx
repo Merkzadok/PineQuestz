@@ -40,10 +40,10 @@ export const WordCard: React.FC<Props> = ({ wordData, onNext }) => {
             width={200}
             height={200}
             className="object-contain rounded-lg shadow-md cursor-pointer"
-            onClick={() => speakText(wordData.word)}
+    
           />
           <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 flex items-center justify-center rounded-lg transition-opacity">
-            <span className="text-white font-bold text-lg">{wordData.word}</span>
+            <span onClick={() => speakText(wordData.word)} className="text-white font-bold text-lg">{wordData.word}</span>
           </div>
         </div>
       )}
