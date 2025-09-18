@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { words as allWords, WordData } from "./utils/data";
-import WordCard from "./components/WordCard";
+import { WordCard } from "./components/WordCard";
 
 export default function Home() {
   const [words, setWords] = useState<WordData[]>([]);
@@ -12,12 +12,14 @@ export default function Home() {
     setWords(shuffleArray(allWords));
   }, []);
 
-  const handleNext = (correct: boolean) => {
-    if (correct) setStreak(streak + 1);
-    else setStreak(0);
+const handleNext = (correct: boolean) => {
+  console.log("Correct:", correct);
 
-    setCurrentIndex((prev) => prev + 1);
-  };
+  setStreak((prev) => (correct ? prev + 1 : 0));
+
+  setCurrentIndex((prev) => (prev + 1 < words.length ? prev + 1 : words.length));
+};
+
 
   if (!words.length)
     return (
@@ -73,7 +75,11 @@ export default function Home() {
 
       {/* Word card */}
       <div className="w-full max-w-md">
-        <WordCard wordData={words[currentIndex]} onNext={handleNext} />
+<WordCard
+  key={words[currentIndex].id}
+  wordData={words[currentIndex]}
+  onNext={(correct: boolean) => handleNext(correct)}
+/>
       </div>
     </div>
   );
