@@ -58,6 +58,7 @@ const WordCard: React.FC<WordCardProps> = ({ wordData, onNext }) => {
         <img
           src={wordData.image}
           alt={wordData.word}
+
           className="w-64 h-64 object-contain rounded-lg mb-6 shadow"
         />
       )}
@@ -94,7 +95,7 @@ const WordCard: React.FC<WordCardProps> = ({ wordData, onNext }) => {
           return (
             <span
               key={idx}
-              className={`inline-block w-12 h-12 flex items-center justify-center text-2xl font-bold rounded-lg transition-all duration-200 transform ${
+              className={`w-12 h-12 flex items-center justify-center text-2xl font-bold rounded-lg transition-all duration-200 transform ${
                 popIndex === idx ? "scale-125" : "scale-100"
               } ${bg}`}
             >
