@@ -14,7 +14,6 @@ import {
   BarChart3,
 } from "lucide-react";
 import { useTextSpeaker } from "@/provider/TextContext";
-import { playAudioDemo } from "@/app/utils/Demospeak";
 
 type Cell = {
   letter: string;
@@ -33,8 +32,10 @@ export default function CrossWordLevel1() {
   const rows = 6;
   const cols = 6;
 
+  const { speakText } = useTextSpeaker();
+
   const words: Word[] = [
-    { word: "сүx", image: "/images/axe.avif" },
+    { word: "сүх", image: "/images/axe.avif" },
     { word: "ном", image: "/images/book.jpeg" },
     { word: "морь", image: "/images/horse.jpg" },
     { word: "сар", image: "/images/moon.jpg" },
@@ -182,9 +183,6 @@ export default function CrossWordLevel1() {
     router.push("/roadmap");
   };
 
-  const speakText = useTextSpeaker();
-  const text = "Зургийг олж, үгийг хай!";
-
   return (
     <div className="min-h-screen bg-gray-50 p-4 sm:p-6">
       <div className="max-w-4xl mx-auto">
@@ -199,7 +197,9 @@ export default function CrossWordLevel1() {
           </div>
           <div className="flex items-center justify-center gap-2">
             <Search className="w-5 h-5 text-gray-600" />
-            <p className="text-gray-600 text-lg sm:text-xl">{text}</p>
+            <p className="text-gray-600 text-lg sm:text-xl">
+              Зургийг олж, үгийг хай!
+            </p>
           </div>
 
           {/* Completion Message */}
@@ -293,6 +293,7 @@ export default function CrossWordLevel1() {
                 {activeWords.map((w) => (
                   <div
                     key={w.word}
+                    onClick={() => speakText(w.word)}
                     className={`relative group cursor-pointer transform transition-all duration-300 ${
                       foundWords.includes(w.word)
                         ? "scale-105"
