@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { Users, ArrowRight } from "lucide-react";
 import Link from "next/link";
+import { GuestUser } from "./guest/page";
 
 const Page = () => {
   const [isLoaded, setIsLoaded] = useState(false);

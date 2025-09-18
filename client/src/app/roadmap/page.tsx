@@ -23,6 +23,22 @@ export default function RoadMap() {
     { id: 1, route: "/main/crossword/1" },
     { id: 2, route: "/main/crossword/2" },
     { id: 3, route: "/main/wordSentence" },
+    { id: 4, route: "/main/wordSentence" },
+    { id: 5, route: "/main/wordSentence" },
+    { id: 6, route: "/main/wordSentence" },
+    { id: 7, route: "/main/wordSentence" },
+    { id: 8, route: "/main/wordSentence" },
+    { id: 9, route: "/main/wordSentence" },
+    { id: 10, route: "/main/wordSentence" },
+    { id: 12, route: "/main/wordSentence" },
+    { id: 13, route: "/main/wordSentence" },
+    { id: 14, route: "/main/wordSentence" },
+    { id: 15, route: "/main/wordSentence" },
+    { id: 16, route: "/main/wordSentence" },
+    { id: 17, route: "/main/wordSentence" },
+    { id: 18, route: "/main/wordSentence" },
+    { id: 19, route: "/main/wordSentence" },
+    { id: 20, route: "/main/wordSentence" },
   ];
 
   // Load progress from localStorage or fallback
@@ -108,9 +124,9 @@ export default function RoadMap() {
         </div>
 
         {/* Roadmap */}
-        <div className="relative">
+        <div className="relative ">
           {/* Connecting Lines */}
-          <div className="absolute left-1/2 top-8 bottom-8 w-0.5 bg-gray-300 transform -translate-x-px">
+          <div className="absolute left-1/2 top-8 bottom-8 w-0.5 bg-gray-300 transform -translate-x-px overflow-y-auto">
             <div
               className="absolute top-0 left-0 w-full bg-gray-800 transition-all duration-1000 ease-out"
               style={{
