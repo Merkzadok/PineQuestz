@@ -8,10 +8,10 @@ import {
   Target,
   Search,
   RotateCcw,
-  Trophy,
   CheckCircle,
   ImageIcon,
   BarChart3,
+  ArrowRight,
 } from "lucide-react";
 import { useTextSpeaker } from "@/provider/TextContext";
 
@@ -201,30 +201,6 @@ export default function CrossWordLevel1() {
               Зургийг олж, үгийг хай!
             </p>
           </div>
-
-          {/* Completion Message */}
-          {activeWords.length > 0 &&
-            foundWords.length === activeWords.length && (
-              <div className="mt-4 p-4 bg-green-50 rounded-lg border border-green-200">
-                <div className="flex flex-col items-center justify-center gap-2">
-                  <div className="flex items-center gap-2">
-                    <Trophy className="w-8 h-8 text-green-600 animate-pulse" />
-                    <p className="text-green-800 text-xl font-bold">
-                      Баяр хүргэе! Бүх үгийг оллоо!
-                    </p>
-                    <Trophy className="w-8 h-8 text-green-600 animate-pulse" />
-                  </div>
-
-                  {/* Continue Button */}
-                  <button
-                    onClick={handleContinue}
-                    className="mt-4 px-6 py-3 bg-gray-900 text-white font-bold rounded-lg shadow-lg transform transition-all duration-200 hover:scale-105 active:scale-95 hover:bg-gray-800"
-                  >
-                    Continue
-                  </button>
-                </div>
-              </div>
-            )}
         </div>
 
         <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 items-start justify-center">
@@ -269,14 +245,37 @@ export default function CrossWordLevel1() {
                 )}
               </div>
 
-              {/* Reset Button */}
-              <button
-                onClick={resetGame}
-                className="mt-4 flex items-center gap-2 px-6 py-3 bg-gray-900 text-white font-bold rounded-lg shadow-lg transform transition-all duration-200 hover:scale-105 active:scale-95 hover:bg-gray-800"
-              >
-                <RotateCcw className="w-5 h-5" />
-                Шинэ тоглоом
-              </button>
+              {/* Action Buttons */}
+              <div className="mt-4 flex items-center justify-center gap-4">
+                {/* Roadmap Button */}
+                <button
+                  onClick={() => router.push("/roadmap")}
+                  className="w-12 h-12 bg-blue-500 text-white rounded-lg shadow-lg transform transition-all duration-200 hover:scale-105 active:scale-95 hover:bg-blue-600 flex items-center justify-center"
+                >
+                  <Target className="w-6 h-6" />
+                </button>
+
+                {/* Next Level Button */}
+                <button
+                  onClick={handleContinue}
+                  disabled={foundWords.length !== activeWords.length}
+                  className={`w-12 h-12 rounded-lg shadow-lg transform transition-all duration-200 flex items-center justify-center ${
+                    foundWords.length === activeWords.length
+                      ? "bg-green-500 text-white hover:scale-105 active:scale-95 hover:bg-green-600 cursor-pointer"
+                      : "bg-gray-300 text-gray-500 cursor-not-allowed opacity-50"
+                  }`}
+                >
+                  <ArrowRight className="w-6 h-6" />
+                </button>
+
+                {/* Reset Button */}
+                <button
+                  onClick={resetGame}
+                  className="w-12 h-12 bg-red-500 text-white rounded-lg shadow-lg transform transition-all duration-200 hover:scale-105 active:scale-95 hover:bg-red-600 flex items-center justify-center"
+                >
+                  <RotateCcw className="w-6 h-6" />
+                </button>
+              </div>
             </div>
           </div>
 

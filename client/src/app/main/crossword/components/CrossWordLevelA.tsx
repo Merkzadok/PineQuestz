@@ -2,127 +2,185 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { Volume2, Star, CheckCircle } from "lucide-react";
+import { Volume2, CheckCircle, RotateCcw } from "lucide-react";
 import { playAudioDemo } from "@/app/utils/Demospeak";
 
 export default function CrossWordLevelA() {
   const [step, setStep] = useState(1);
   const [foundCount, setFoundCount] = useState(0);
   const [completed, setCompleted] = useState(false);
+  const [clickedLetters, setClickedLetters] = useState<boolean[]>(
+    new Array(10).fill(false)
+  );
+  const [wrongCells, setWrongCells] = useState<number[]>([]);
 
   // Letters for mini-game
   const letters = ["А", "Э", "И", "А", "О", "А", "Ү", "Ө", "У", "А"];
-
   const handleFind = (idx: number) => {
+    if (clickedLetters[idx]) return; // Already clicked
+
+    const newClicked = [...clickedLetters];
+    newClicked[idx] = true;
+
     if (letters[idx] === "А") {
+      setClickedLetters(newClicked);
       setFoundCount((prev) => prev + 1);
+
+      if (foundCount + 1 >= 4) {
+        setTimeout(() => {
+          setCompleted(true);
+          localStorage.setItem("level1", "completed");
+        }, 500);
+      }
+    } else {
+      // Wrong letter: trigger shake
+      setWrongCells((prev) => [...prev, idx]);
+      setTimeout(() => {
+        setWrongCells((prev) => prev.filter((i) => i !== idx));
+      }, 600); // duration of shake animation
     }
   };
 
-  // When they find 3 As → complete activity
-  if (foundCount >= 3 && step === 3) {
-    setTimeout(() => {
-      setCompleted(true);
-    }, 500);
-  }
+  const resetGame = () => {
+    setStep(1);
+    setFoundCount(0);
+    setCompleted(false);
+    setClickedLetters(new Array(10).fill(false));
+  };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-      <div className="max-w-lg w-full bg-white rounded-2xl shadow-lg p-6 space-y-6">
+    <div className="min-h-screen bg-background flex items-center justify-center p-4">
+      <div className="max-w-md w-full">
         {/* Step 1: Show the letter А */}
         {step === 1 && (
-          <div className="text-center space-y-4">
-            <h1 className="text-7xl font-bold text-gray-900">А</h1>
-            <h2 className="text-6xl font-bold text-gray-700">а</h2>
+          <div className="bg-card rounded-3xl border shadow-lg p-8 text-center space-y-6">
+            <div className="space-y-4">
+              <div className="text-8xl font-bold text-foreground">А</div>
+              <div className="text-6xl font-bold text-muted-foreground">а</div>
+            </div>
+
             <button
               onClick={() => playAudioDemo("/audio/a.mp3")}
-              className="mt-4 flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-xl font-bold shadow-md hover:bg-blue-500"
+              className="inline-flex items-center gap-3 px-6 py-3 bg-primary text-primary-foreground rounded-2xl font-semibold shadow-md hover:bg-primary/90 transition-colors"
             >
-              <Volume2 className="w-6 h-6" />
-              Дууг сонсох
+              <Volume2 className="w-5 h-5" />
+              Listen
             </button>
+
             <button
               onClick={() => setStep(2)}
-              className="block mx-auto mt-6 px-6 py-3 bg-gray-900 text-white rounded-xl font-bold hover:bg-gray-800"
+              className="block w-full mt-6 px-6 py-3 bg-secondary text-secondary-foreground rounded-2xl font-semibold hover:bg-secondary/80 transition-colors"
             >
-              Дараах
+              Next
             </button>
           </div>
         )}
 
         {/* Step 2: Word with picture */}
         {step === 2 && (
-          <div className="text-center space-y-4">
-            <h2 className="text-2xl font-bold text-gray-800">Аав</h2>
-            <div className="relative w-40 h-40 mx-auto">
+          <div className="bg-card rounded-3xl border shadow-lg p-8 text-center space-y-6">
+            <h2 className="text-3xl font-bold text-foreground">Алим</h2>
+
+            <div className="relative w-32 h-32 mx-auto bg-muted rounded-2xl overflow-hidden">
               <Image
-                src="/images/father.png"
-                alt="Аав"
+                src="/images/apple.jpg"
+                alt="apple"
                 fill
-                className="object-contain"
+                className="object-contain p-2"
               />
             </div>
-            <p className="text-lg text-gray-700">
-              <span className="text-red-600 font-bold">А</span>ав
+
+            <p className="text-xl text-foreground">
+              <span className="text-primary font-bold text-2xl">А</span>ав
             </p>
+
             <button
               onClick={() => setStep(3)}
-              className="mt-6 px-6 py-3 bg-gray-900 text-white rounded-xl font-bold hover:bg-gray-800"
+              className="block w-full px-6 py-3 bg-secondary text-secondary-foreground rounded-2xl font-semibold hover:bg-secondary/80 transition-colors"
             >
-              Дараах
+              Next
             </button>
           </div>
         )}
 
         {/* Step 3: Mini activity - find А */}
         {step === 3 && !completed && (
-          <div className="text-center space-y-4">
-            <h2 className="text-xl font-bold text-gray-800">"А" үсгийг дар!</h2>
-            <div className="grid grid-cols-5 gap-3 justify-center">
-              {letters.map((letter, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => handleFind(idx)}
-                  disabled={letter === "✓"}
-                  className={`w-12 h-12 text-2xl font-bold border-2 rounded-lg transition 
-                  ${
-                    letter === "А"
-                      ? "bg-blue-100 hover:bg-blue-200 text-blue-700 border-blue-300"
-                      : "bg-gray-100 hover:bg-gray-200 text-gray-700 border-gray-300"
-                  }`}
-                >
-                  {letter}
-                </button>
-              ))}
+          <div className="bg-card rounded-3xl border shadow-lg p-8 text-center space-y-6">
+            <h2 className="text-2xl font-bold text-foreground">
+              Find all А letters!
+            </h2>
+
+            <div className="grid grid-cols-5 gap-3">
+              {letters.map((letter, idx) => {
+                const isCorrect = letter === "А";
+                const isClicked = clickedLetters[idx];
+                const isWrong = wrongCells.includes(idx);
+
+                return (
+                  <button
+                    key={idx}
+                    onClick={() => handleFind(idx)}
+                    disabled={isClicked}
+                    className={`w-12 h-12 text-2xl font-bold rounded-xl transition-all duration-200 border-2
+        ${
+          isClicked && isCorrect
+            ? "bg-green-100 text-green-700 border-green-300 scale-110"
+            : isWrong
+            ? "bg-background text-red-600 border-red-300 animate-shake"
+            : "bg-background hover:bg-muted text-foreground border-border hover:scale-105"
+        }
+        ${isClicked ? "cursor-not-allowed" : "cursor-pointer"}
+      `}
+                  >
+                    {isClicked && isCorrect ? "✓" : letter}
+                  </button>
+                );
+              })}
             </div>
-            <p className="text-gray-600 mt-2">Олсон: {foundCount}/3</p>
+
+            <div className="bg-muted rounded-2xl p-4">
+              <p className="text-muted-foreground">Found: {foundCount}/4</p>
+              <div className="w-full bg-border rounded-full h-2 mt-2">
+                <div
+                  className="bg-primary rounded-full h-2 transition-all duration-300"
+                  style={{ width: `${(foundCount / 4) * 100}%` }}
+                />
+              </div>
+            </div>
           </div>
         )}
 
         {/* Step 4: Completion */}
         {completed && (
-          <div className="text-center space-y-4">
-            <CheckCircle className="w-16 h-16 text-green-600 mx-auto animate-bounce" />
-            <h2 className="text-2xl font-bold text-green-700">Баяр хүргэе!</h2>
-            <p className="text-gray-700">Чи "А" үсгийг сурлаа!</p>
-            <div className="flex justify-center gap-2 mt-4">
-              {[1, 2, 3].map((i) => (
-                <Star
-                  key={i}
-                  className="w-8 h-8 text-yellow-400 fill-yellow-400"
-                />
-              ))}
+          <div className="bg-card rounded-3xl border shadow-lg p-8 text-center space-y-6">
+            <CheckCircle className="w-20 h-20 text-green-600 mx-auto animate-bounce" />
+
+            <div className="space-y-2">
+              <h2 className="text-3xl font-bold text-green-700">Great job!</h2>
+              <p className="text-muted-foreground text-lg">
+                You learned the letter А!
+              </p>
             </div>
-            <button
-              onClick={() => {
-                setStep(1);
-                setFoundCount(0);
-                setCompleted(false);
-              }}
-              className="mt-6 px-6 py-3 bg-gray-900 text-white rounded-xl font-bold hover:bg-gray-800"
-            >
-              Дахин тоглох
-            </button>
+
+            {/* Success animation */}
+            <div className="text-6xl animate-pulse">🎉</div>
+
+            <div className="flex gap-4">
+              <button
+                onClick={resetGame}
+                className="flex-1 inline-flex items-center justify-center gap-2 px-6 py-3 bg-secondary text-secondary-foreground rounded-2xl font-semibold hover:bg-secondary/80 transition-colors"
+              >
+                <RotateCcw className="w-4 h-4" />
+                Play Again
+              </button>
+
+              <button
+                onClick={() => window.history.back()}
+                className="flex-1 px-6 py-3 bg-primary text-primary-foreground rounded-2xl font-semibold hover:bg-primary/90 transition-colors"
+              >
+                Continue
+              </button>
+            </div>
           </div>
         )}
       </div>
