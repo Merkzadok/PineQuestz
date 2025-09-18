@@ -12,6 +12,7 @@ import {
   ImageIcon,
   BarChart3,
   ArrowRight,
+  ArrowLeft,
 } from "lucide-react";
 import { useTextSpeaker } from "@/provider/TextContext";
 
@@ -246,34 +247,32 @@ export default function CrossWordLevel1() {
               </div>
 
               {/* Action Buttons */}
-              <div className="mt-4 flex items-center justify-center gap-4">
+              <div className="mt-4 flex items-center justify-center gap-6">
                 {/* Roadmap Button */}
                 <button
                   onClick={() => router.push("/roadmap")}
-                  className="w-12 h-12 bg-blue-500 text-white rounded-lg shadow-lg transform transition-all duration-200 hover:scale-105 active:scale-95 hover:bg-blue-600 flex items-center justify-center"
+                  className="w-16 h-12 bg-indigo-400 text-white rounded-lg shadow-lg transform transition-all duration-200 hover:scale-105 active:scale-95 hover:bg-indigo-500 flex items-center justify-center"
                 >
-                  <Target className="w-6 h-6" />
+                  <ArrowLeft className="w-6 h-6" />
+                </button>{" "}
+                {/* Reset Button */}
+                <button
+                  onClick={resetGame}
+                  className="w-16 h-12 bg-gray-400 text-white rounded-lg shadow-lg transform transition-all duration-200 hover:scale-105 active:scale-95 hover:bg-gray-500 flex items-center justify-center"
+                >
+                  <RotateCcw className="w-6 h-6" />
                 </button>
-
                 {/* Next Level Button */}
                 <button
                   onClick={handleContinue}
                   disabled={foundWords.length !== activeWords.length}
-                  className={`w-12 h-12 rounded-lg shadow-lg transform transition-all duration-200 flex items-center justify-center ${
+                  className={`w-16 h-12 rounded-lg shadow-lg transform transition-all duration-200 flex items-center justify-center ${
                     foundWords.length === activeWords.length
-                      ? "bg-green-500 text-white hover:scale-105 active:scale-95 hover:bg-green-600 cursor-pointer"
+                      ? "bg-teal-400 text-white hover:scale-105 active:scale-95 hover:bg-teal-500 cursor-pointer"
                       : "bg-gray-300 text-gray-500 cursor-not-allowed opacity-50"
                   }`}
                 >
                   <ArrowRight className="w-6 h-6" />
-                </button>
-
-                {/* Reset Button */}
-                <button
-                  onClick={resetGame}
-                  className="w-12 h-12 bg-red-500 text-white rounded-lg shadow-lg transform transition-all duration-200 hover:scale-105 active:scale-95 hover:bg-red-600 flex items-center justify-center"
-                >
-                  <RotateCcw className="w-6 h-6" />
                 </button>
               </div>
             </div>
