@@ -1,54 +1,114 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { WordData } from "../utils/data";
+import {
+  DndContext,
+  useDraggable,
+  useDroppable,
+  DragEndEvent,
+} from "@dnd-kit/core";
 
 interface WordCardProps {
   wordData: WordData;
   onNext: (correct: boolean) => void;
 }
 
-const WordCard: React.FC<WordCardProps> = ({ wordData, onNext }) => {
-  const [userLetters, setUserLetters] = useState<(string | null)[]>(
-    Array(wordData.word.length).fill(null)
-  );
-  const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
-  const [popIndex, setPopIndex] = useState<number | null>(null);
+// Draggable letter
+const DraggableLetter = ({ id, letter }: { id: string; letter: string }) => {
+  const { attributes, listeners, setNodeRef, transform, isDragging } =
+    useDraggable({ id });
 
-  useEffect(() => {
-    if (popIndex !== null) {
-      const timer = setTimeout(() => setPopIndex(null), 200);
-      return () => clearTimeout(timer);
-    }
-  }, [popIndex]);
-
-  const toggleLetter = (letter: string) => {
-    const newLetters = [...userLetters];
-
-    // давхар letter-ийг зөв тохиолдолд зөв байрлалд нэмэх
-    const firstEmpty = newLetters.indexOf(null);
-    if (firstEmpty !== -1) {
-      newLetters[firstEmpty] = letter;
-      setPopIndex(firstEmpty);
-    } else {
-      // Letter-ийг арилгах (undo)
-      const removeIdx = newLetters.indexOf(letter);
-      if (removeIdx !== -1) newLetters[removeIdx] = null;
-    }
-
-    setUserLetters(newLetters);
+  const style = {
+    transform: transform
+      ? `translate3d(${transform.x}px, ${transform.y}px, 0)`
+      : undefined,
   };
 
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      {...listeners}
+      {...attributes}
+      className={`w-12 h-12 flex items-center justify-center rounded-lg border font-bold text-lg cursor-grab transition ${
+        isDragging
+          ? "bg-yellow-300 scale-110 shadow-lg"
+          : "bg-gray-200 hover:bg-gray-300"
+      }`}
+    >
+      {letter}
+    </div>
+  );
+};
+
+// Droppable slot
+const DroppableSlot = ({
+  id,
+  children,
+}: {
+  id: string;
+  children: React.ReactNode;
+}) => {
+  const { setNodeRef, isOver } = useDroppable({ id });
+
+  return (
+    <div
+      ref={setNodeRef}
+      className={`w-12 h-12 flex items-center justify-center rounded-lg border-2 font-bold text-xl transition ${
+        isOver ? "bg-green-200 border-green-500" : "bg-gray-100 border-gray-300"
+      }`}
+    >
+      {children}
+    </div>
+  );
+};
+
+const WordCard: React.FC<WordCardProps> = ({ wordData, onNext }) => {
+  const [slots, setSlots] = useState<(string | null)[]>(
+    Array(wordData.word.length).fill(null)
+  );
+  const [pool, setPool] = useState(wordData.letters);
+  const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
+
+const handleDragEnd = (event: DragEndEvent) => {
+  const { over, active } = event;
+  if (over) {
+    const letterId = active.id as string; // жишээ: "A-0"
+    const letter = letterId.split("-")[0]; // зөвхөн "A" гэх мэт
+
+    if (typeof over.id === "string" && over.id.startsWith("slot-")) {
+      const slotIdx = parseInt(over.id.replace("slot-", ""), 10);
+
+      if (!isNaN(slotIdx)) {
+        const newSlots = [...slots];
+
+        // өмнө нь энэ slot-д байсан үсгийг pool руу буцаана
+        if (newSlots[slotIdx]) {
+          setPool((prev) => [...prev, newSlots[slotIdx]!]);
+        }
+
+        // slot-д шинэ үсэг байрлуулна
+        newSlots[slotIdx] = letter;
+        setSlots(newSlots);
+
+        // pool-с тухайн unique ID-г арилгана
+        setPool((prev) => prev.filter((l, idx) => `${l}-${idx}` !== letterId));
+      }
+    }
+  }
+};
+
   const checkAnswer = () => {
-    const correct = userLetters.join("") === wordData.word;
-    setIsCorrect(correct);
+    const answer = slots.join("");
+    setIsCorrect(answer === wordData.word);
   };
 
   const handleNext = () => {
     onNext(isCorrect === true);
-    setUserLetters(Array(wordData.word.length).fill(null));
+    setSlots(Array(wordData.word.length).fill(null));
+    setPool(wordData.letters);
     setIsCorrect(null);
-    setPopIndex(null);
   };
 
   return (
@@ -58,52 +118,31 @@ const WordCard: React.FC<WordCardProps> = ({ wordData, onNext }) => {
         <img
           src={wordData.image}
           alt={wordData.word}
-
           className="w-64 h-64 object-contain rounded-lg mb-6 shadow"
         />
       )}
 
-      {/* Letters Buttons */}
-      <div className="flex flex-wrap justify-center gap-2 mb-6">
-        {wordData.letters.map((letter, idx) => {
-          const selectedIdx = userLetters.indexOf(letter);
-          let bg = "bg-gray-200 hover:bg-gray-300";
-
-          // зөв дарагдсан бол ногоон
-          if (selectedIdx !== -1 && letter === wordData.word[selectedIdx]) bg = "bg-green-400 text-white";
-
-          return (
-            <button
-              key={idx}
-              onClick={() => toggleLetter(letter)}
-              className={`w-12 h-12 flex items-center justify-center border rounded-xl font-medium transition-colors ${bg}`}
-            >
+      <DndContext onDragEnd={handleDragEnd}>
+        {/* Slots */}
+        <div className="flex gap-2 mb-6">
+          {slots.map((letter, idx) => (
+            <DroppableSlot key={idx} id={`slot-${idx}`}>
               {letter}
-            </button>
-          );
-        })}
-      </div>
+            </DroppableSlot>
+          ))}
+        </div>
 
-      {/* Selected Letters Display */}
-      <div className="text-center mb-6 flex flex-wrap justify-center gap-2">
-        {userLetters.map((letter, idx) => {
-          let bg = "bg-gray-100 text-gray-700";
-          if (letter) {
-            bg = letter === wordData.word[idx] ? "bg-green-200 text-green-800" : "bg-red-200 text-red-800";
-          }
-
-          return (
-            <span
-              key={idx}
-              className={`w-12 h-12 flex items-center justify-center text-2xl font-bold rounded-lg transition-all duration-200 transform ${
-                popIndex === idx ? "scale-125" : "scale-100"
-              } ${bg}`}
-            >
-              {letter || ""}
-            </span>
-          );
-        })}
-      </div>
+        {/* Pool Letters */}
+        <div className="flex flex-wrap gap-2 mb-6 justify-center">
+          {pool.map((letter, idx) => (
+            <DraggableLetter
+              key={`${letter}-${idx}`}
+              id={letter + "-" + idx}
+              letter={letter}
+            />
+          ))}
+        </div>
+      </DndContext>
 
       {/* Buttons */}
       <div className="flex gap-4">
@@ -115,7 +154,6 @@ const WordCard: React.FC<WordCardProps> = ({ wordData, onNext }) => {
             Шалгах
           </button>
         )}
-
         {isCorrect !== null && (
           <button
             onClick={handleNext}
@@ -125,6 +163,17 @@ const WordCard: React.FC<WordCardProps> = ({ wordData, onNext }) => {
           </button>
         )}
       </div>
+
+      {/* Result */}
+      {isCorrect !== null && (
+        <p
+          className={`mt-4 text-xl font-bold ${
+            isCorrect ? "text-green-600" : "text-red-600"
+          }`}
+        >
+          {isCorrect ? "Зөв байна! 🎉" : "Буруу байна 😅"}
+        </p>
+      )}
     </div>
   );
 };
