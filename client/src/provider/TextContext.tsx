@@ -24,8 +24,9 @@ export const TextSpeakerProvider: React.FC<{ children: React.ReactNode }> = ({
       const blob = await res.blob();
       const url = URL.createObjectURL(blob);
 
-      const audio = new Audio(url); // <audio> tag-ыг DOM-д нэмэхгүйгээр
-      audio.play(); // шууд тоглуулах
+      const audio = new Audio(url);
+      audio.playbackRate = 0.7;
+      audio.play();
     } catch (err) {
       console.error("Audio play failed:", err);
     }
@@ -43,5 +44,5 @@ export const useTextSpeaker = () => {
   if (!context) {
     throw new Error("useTextSpeaker must be used within a TextSpeakerProvider");
   }
-  return context; // бүх context буцаана { speakText }
+  return context;
 };
