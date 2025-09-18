@@ -7,18 +7,13 @@ interface Props {
 
 export const AudioRecorder: React.FC<Props> = ({ correctWord }) => {
   const [recording, setRecording] = useState(false);
-  const [result, setResult] = useState<string>("");
+  const [result, setResult] = useState("");
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
 
   const startRecording = async () => {
-    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-      alert("Таны браузер микрофон дэмжихгүй байна");
-      return;
-    }
-
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
     const mediaRecorder = new MediaRecorder(stream);
     mediaRecorderRef.current = mediaRecorder;
@@ -29,8 +24,8 @@ export const AudioRecorder: React.FC<Props> = ({ correctWord }) => {
     };
 
     mediaRecorder.onstop = async () => {
-      const audioBlob = new Blob(audioChunksRef.current, { type: "audio/webm" });
-      await sendToWhisper(audioBlob);
+      const blob = new Blob(audioChunksRef.current, { type: "audio/webm" });
+      await sendToWhisper(blob);
     };
 
     mediaRecorder.start();
@@ -49,26 +44,24 @@ export const AudioRecorder: React.FC<Props> = ({ correctWord }) => {
       const base64 = reader.result!.toString().split(",")[1];
 
       try {
-     const res = await fetch("/api/whisper", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ audio: base64 }), // base64 from recorded blob
-});
-
-
-     const data = await res.json();
-const spokenText = (data.text || "").trim().toLowerCase();
-setResult(spokenText);
-setIsCorrect(spokenText === correctWord.toLowerCase());
+        const res = await fetch("http://localhost:4001/api/whisper", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ audio: base64 }),
+        });
+        const data = await res.json();
+        const spokenText = (data.text || "").trim().toLowerCase();
+        setResult(spokenText);
+        setIsCorrect(spokenText === correctWord.toLowerCase());
       } catch (err) {
         console.error(err);
-        alert("Whisper API руу дамжуулахад алдаа гарлаа");
+        alert("Whisper API алдаа гарлаа");
       }
     };
   };
 
   return (
-    <div className="mt-4">
+    <div>
       <button
         onClick={recording ? stopRecording : startRecording}
         className={`p-2 rounded ${recording ? "bg-red-500" : "bg-blue-500"} text-white`}
@@ -77,7 +70,7 @@ setIsCorrect(spokenText === correctWord.toLowerCase());
       </button>
 
       {result && (
-        <p className="mt-2">
+        <p>
           Танилцуулсан үг: <strong>{result}</strong>
           {isCorrect !== null && (
             <span className={isCorrect ? "text-green-600" : "text-red-600"}>
@@ -88,4 +81,4 @@ setIsCorrect(spokenText === correctWord.toLowerCase());
       )}
     </div>
   );
-}
+};
