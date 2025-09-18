@@ -3,6 +3,7 @@ import { useParams } from "next/navigation";
 import CrossWordLevel1 from "../components/CrossWordLevel1";
 import CrossWordLevel2 from "../components/CrossWordLevel2";
 import { JSX } from "react";
+import CrossWordLevelA from "../components/CrossWordLevelA";
 
 const CrossWordPage = () => {
   const params = useParams();
@@ -11,6 +12,8 @@ const CrossWordPage = () => {
   const lessonMap: Record<number, JSX.Element> = {
     1: <CrossWordLevel1 />,
     2: <CrossWordLevel2 />,
+    3: <CrossWordLevelA />,
+
     // add more lessons here
   };
 
