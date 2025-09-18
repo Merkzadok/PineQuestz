@@ -11,6 +11,7 @@ import {
   BarChart3,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useTextSpeaker } from "@/provider/TextContext";
 
 type Cell = {
   letter: string;
@@ -40,6 +41,7 @@ export default function CrossWordLevel2() {
     { word: "жудо", image: "/images/judo.avif" },
     { word: "төгрөг", image: "/images/tugrug.png" },
   ];
+  const { speakText } = useTextSpeaker();
 
   const [grid, setGrid] = useState<Cell[][]>([]);
   const [selectedCells, setSelectedCells] = useState<[number, number][]>([]);
@@ -289,6 +291,7 @@ export default function CrossWordLevel2() {
                 {activeWords.map((w, index) => (
                   <div
                     key={w.word}
+                    onClick={() => speakText(w.word)}
                     className={`
                       relative group cursor-pointer
                       transform transition-all duration-300
