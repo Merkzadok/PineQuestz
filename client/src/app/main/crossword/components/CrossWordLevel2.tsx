@@ -179,7 +179,7 @@ export default function CrossWordLevel2() {
     // Save level progress in localStorage
     localStorage.setItem("level2", "completed");
     // Redirect to roadmap page
-    router.push("/roadmap");
+    router.push("/");
   };
 
   return (
@@ -248,7 +248,7 @@ export default function CrossWordLevel2() {
               <div className="mt-4 flex items-center justify-center gap-6">
                 {/* Roadmap Button */}
                 <button
-                  onClick={() => router.push("/roadmap")}
+                  onClick={() => router.push("/")}
                   className="w-16 h-12 bg-indigo-400 text-white rounded-lg shadow-lg transform transition-all duration-200 hover:scale-105 active:scale-95 hover:bg-indigo-500 flex items-center justify-center"
                 >
                   <ArrowLeft className="w-6 h-6" />
