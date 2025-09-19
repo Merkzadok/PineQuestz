@@ -1,10 +1,9 @@
 import { useState } from "react";
-import { icon, WordData } from "../utils/data";
+import { WordData } from "../utils/data";
 import { DragDropWord } from "./DragDropWord";
-import { AudioRecorder } from "./AudioRecorder";
 import Image from "next/image";
 import { useTextSpeaker } from "@/provider/TextContext";
-import { Mic, Mic2, Volume2 } from "lucide-react";
+import { Volume2 } from "lucide-react";
 
 interface Props {
   wordData: WordData;
@@ -31,6 +30,14 @@ export const WordCard: React.FC<Props> = ({ wordData, onNext }) => {
     }
   };
 
+  // ✅ Slots дээрээс бүтсэн үгийг уншуулах
+  const handleSpeakSlots = () => {
+    const currentWord = slots.filter(Boolean).join("");
+    if (currentWord) {
+      speakText(currentWord);
+    }
+  };
+
   return (
     <div className="bg-white rounded-2xl shadow-xl p-6 flex flex-col items-center w-full max-w-lg mx-auto">
       {wordData.image && (
@@ -41,39 +48,52 @@ export const WordCard: React.FC<Props> = ({ wordData, onNext }) => {
             width={200}
             height={200}
             className="object-contain rounded-lg shadow-md cursor-pointer"
-    
           />
           <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 flex items-center justify-center rounded-lg transition-opacity">
-            <Volume2 onClick={() => speakText(wordData.word)} className="text-white" />
+            {/* Зөв үгийг унших */}
+            <Volume2
+              onClick={() => speakText(wordData.word)}
+              className="text-white cursor-pointer"
+            />
           </div>
         </div>
       )}
 
-      <DragDropWord word={wordData.word} letters={wordData.letters} onSlotsChange={setSlots} />
+      <DragDropWord
+        word={wordData.word}
+        letters={wordData.letters}
+        onSlotsChange={setSlots}
+      />
 
-<div className="flex item-center justify-center gap-4 mt-4">
-  <button
-        onClick={handleCheckOrNext}
-        className={`mt-4 px-6 py-2 rounded-full shadow-md text-lg font-bold transition ${
-          isCorrect === null
-            ? "bg-green-500 text-white hover:bg-green-600"
-            : isCorrect
-            ? "bg-yellow-400 text-black hover:bg-yellow-500"
-            : "bg-blue-500 text-white hover:bg-blue-600"
-        }`}
-      >
-        {isCorrect === null ? "Шалгах" : isCorrect ? "Дараах" : "Дахин эхлэх"}
-      </button>
-  
-      {showPopup && (
-        <div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none">
-          <div className="bg-white px-6 py-4 rounded-2xl shadow-2xl text-xl font-bold text-center transform transition-all duration-500 ease-out scale-110 -translate-y-4 opacity-100">
-            {showPopup}
+        {/* ✅ Slots-оор бүтсэн үгийг унших Volume товч */}
+        <Volume2
+          onClick={handleSpeakSlots}
+          className="w-10 h-10 text-green-600 cursor-pointer hover:text-green-800 transition"
+        />
+
+      <div className="flex items-center justify-center gap-4 mt-4">
+        <button
+          onClick={handleCheckOrNext}
+          className={`mt-4 px-6 py-2 rounded-full shadow-md text-lg font-bold transition ${
+            isCorrect === null
+              ? "bg-green-500 text-white hover:bg-green-600"
+              : isCorrect
+              ? "bg-yellow-400 text-black hover:bg-yellow-500"
+              : "bg-blue-500 text-white hover:bg-blue-600"
+          }`}
+        >
+          {isCorrect === null ? "Шалгах" : isCorrect ? "Дараах" : "Дахин эхлэх"}
+        </button>
+
+
+        {showPopup && (
+          <div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none">
+            <div className="bg-white px-6 py-4 rounded-2xl shadow-2xl text-xl font-bold text-center transform transition-all duration-500 ease-out scale-110 -translate-y-4 opacity-100">
+              {showPopup}
+            </div>
           </div>
-        </div>
-      )}
-
-</div>
+        )}
+      </div>
     </div>
   );
 };
