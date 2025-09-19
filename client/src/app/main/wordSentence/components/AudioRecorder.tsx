@@ -1,5 +1,3 @@
-"use client";
-
 import React, { forwardRef, useImperativeHandle, useRef } from "react";
 import { ReactMediaRecorder } from "react-media-recorder";
 
@@ -92,5 +90,3 @@ const VoiceRecorder = forwardRef<VoiceRecorderHandle, Props>(
 );
 
 VoiceRecorder.displayName = "VoiceRecorder";
-
-export default VoiceRecorder;
