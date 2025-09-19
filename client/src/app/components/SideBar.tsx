@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { User, LogOut, Map, BookOpen, Home, Trophy } from "lucide-react";
 
 export default function Sidebar() {
@@ -7,30 +8,35 @@ export default function Sidebar() {
       label: "Profile",
       icon: User,
       color: "text-blue-600",
+      href: "/parent",
     },
     {
       id: "roadmap",
       label: "Roadmap",
       icon: Map,
       color: "text-cyan-600",
+      href: "/roadmap",
     },
     {
       id: "letters",
       label: "Letters",
       icon: BookOpen,
       color: "text-purple-600",
+      href: "/letters",
     },
     {
       id: "achievements",
       label: "Achievements",
       icon: Trophy,
       color: "text-amber-600",
+      href: "/achievements",
     },
     {
       id: "logout",
       label: "Log Out",
       icon: LogOut,
       color: "text-slate-600",
+      href: "/logout",
     },
   ];
 
@@ -58,19 +64,36 @@ export default function Sidebar() {
             const IconComponent = item.icon;
             return (
               <li key={item.id}>
-                <button
-                  className="w-full flex items-center space-x-3 px-4 py-3 rounded-xl 
-                             text-left transition-all duration-200 
-                             hover:bg-blue-50 hover:shadow-sm focus:outline-none 
-                             focus:ring-2 focus:ring-blue-400"
-                >
-                  <IconComponent
-                    className={`w-5 h-5 ${item.color} transition-colors duration-200`}
-                  />
-                  <span className="text-slate-700 font-medium transition-colors duration-200">
-                    {item.label}
-                  </span>
-                </button>
+                {item.href ? (
+                  <Link
+                    href={item.href}
+                    className="w-full flex items-center space-x-3 px-4 py-3 rounded-xl
+                               text-left transition-all duration-200
+                               hover:bg-blue-50 hover:shadow-sm focus:outline-none
+                               focus:ring-2 focus:ring-blue-400"
+                  >
+                    <IconComponent
+                      className={`w-5 h-5 ${item.color} transition-colors duration-200`}
+                    />
+                    <span className="text-slate-700 font-medium transition-colors duration-200">
+                      {item.label}
+                    </span>
+                  </Link>
+                ) : (
+                  <button
+                    className="w-full flex items-center space-x-3 px-4 py-3 rounded-xl
+                                     text-left transition-all duration-200
+                                     hover:bg-blue-50 hover:shadow-sm focus:outline-none
+                                     focus:ring-2 focus:ring-blue-400"
+                  >
+                    <IconComponent
+                      className={`w-5 h-5 ${item.color} transition-colors duration-200`}
+                    />
+                    <span className="text-slate-700 font-medium transition-colors duration-200">
+                      {item.label}
+                    </span>
+                  </button>
+                )}
               </li>
             );
           })}
