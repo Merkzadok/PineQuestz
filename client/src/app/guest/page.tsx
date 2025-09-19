@@ -1,7 +1,8 @@
+"use client";
 import { useEffect, useState } from "react";
 
-export const GuestUser = async () => {
-  const [user, setUser] = useState<String[]>([]);
+function GuestUser() {
+  const [user, setUser] = useState<string[]>([]);
 
   useEffect(() => {
     const Guest = async () => {
@@ -21,4 +22,6 @@ export const GuestUser = async () => {
     };
     Guest();
   }, []);
-};
+}
+
+export default GuestUser;
