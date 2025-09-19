@@ -10,7 +10,7 @@ const KidPage: React.FC = () => {
 
   const handlePlayLesson = () => {
     // router.push(`/main/crossword/${currentLesson}`);
-    router.push("roadmap");
+    router.push("/");
   };
 
   const handleGames = () => {
