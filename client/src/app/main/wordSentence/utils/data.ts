@@ -36,3 +36,9 @@ export const words: WordData[] = [
   { id: "17", word: "жудо", letters: ["ж", "у", "д", "о"], image: "/images/judo.avif" },
   { id: "18", word: "төгрөг", letters: ["т", "ө", "г", "р", "ө", "г"], image: "/images/tugrug.png" },
 ];
+
+export const icon: { id: string; image: string }[] = [
+  { id: "1", image: "/image/volume.png" },
+  { id: "2", image: "/image/microphone.png" },
+  { id: "3", image: "/client/public/images/sound_7945283.png" }
+]
