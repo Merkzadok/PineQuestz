@@ -3,7 +3,7 @@ import { WordData } from "../utils/data";
 import { DragDropWord } from "./DragDropWord";
 import Image from "next/image";
 import { useTextSpeaker } from "@/provider/TextContext";
-import { Volume2 } from "lucide-react";
+import { Mic2, Volume2 } from "lucide-react";
 
 interface Props {
   wordData: WordData;
@@ -30,7 +30,7 @@ export const WordCard: React.FC<Props> = ({ wordData, onNext }) => {
     }
   };
 
-  // ✅ Slots дээрээс бүтсэн үгийг уншуулах
+  // Slots дээрээс бүтсэн үгийг уншуулах
   const handleSpeakSlots = () => {
     const currentWord = slots.filter(Boolean).join("");
     if (currentWord) {
@@ -85,6 +85,7 @@ export const WordCard: React.FC<Props> = ({ wordData, onNext }) => {
           {isCorrect === null ? "Шалгах" : isCorrect ? "Дараах" : "Дахин эхлэх"}
         </button>
 
+        
 
         {showPopup && (
           <div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none">

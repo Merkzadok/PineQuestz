@@ -1,83 +1,136 @@
 "use client";
-import { useState, useRef } from "react";
+
+import { useState } from "react";
+import { WordData } from "../utils/data";
+import { DragDropWord } from "./DragDropWord";
+import Image from "next/image";
+import { useTextSpeaker } from "@/provider/TextContext";
+import { Volume2 } from "lucide-react";
 
 interface Props {
-  correctWord: string;
+  wordData: WordData;
+  onNext: (correct: boolean) => void;
 }
 
-export const AudioRecorder: React.FC<Props> = ({ correctWord }) => {
-  const [recording, setRecording] = useState(false);
-  const [result, setResult] = useState("");
-  const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
+// 🎤 Web Speech API аудио recorder
+const AudioRecorderWebSpeech: React.FC<{ onResult: (text: string) => void }> = ({ onResult }) => {
+  const [listening, setListening] = useState(false);
+  const [text, setText] = useState("");
 
-  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-  const audioChunksRef = useRef<Blob[]>([]);
+  const startListening = () => {
+    const SpeechRecognition =
+      (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SpeechRecognition) return alert("Your browser does not support SpeechRecognition");
 
-  const startRecording = async () => {
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    const mediaRecorder = new MediaRecorder(stream);
-    mediaRecorderRef.current = mediaRecorder;
-    audioChunksRef.current = [];
+    const recognition = new SpeechRecognition();
+    recognition.lang = "mn-MN"; // Монгол хэл
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
 
-    mediaRecorder.ondataavailable = (e) => {
-      if (e.data.size > 0) audioChunksRef.current.push(e.data);
+    recognition.start();
+    setListening(true);
+
+    recognition.onresult = (event: any) => {
+      const transcript = event.results[0][0].transcript;
+      setText(transcript);
+      onResult(transcript);
     };
 
-    mediaRecorder.onstop = async () => {
-      const blob = new Blob(audioChunksRef.current, { type: "audio/webm" });
-      await sendToWhisper(blob);
-    };
-
-    mediaRecorder.start();
-    setRecording(true);
-  };
-
-  const stopRecording = () => {
-    mediaRecorderRef.current?.stop();
-    setRecording(false);
-  };
-
-  const sendToWhisper = async (audioBlob: Blob) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(audioBlob);
-    reader.onloadend = async () => {
-      const base64 = reader.result!.toString().split(",")[1];
-
-      try {
-        const res = await fetch("http://localhost:4001/api/whisper", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ audio: base64 }),
-        });
-        const data = await res.json();
-        const spokenText = (data.text || "").trim().toLowerCase();
-        setResult(spokenText);
-        setIsCorrect(spokenText === correctWord.toLowerCase());
-      } catch (err) {
-        console.error(err);
-        alert("Whisper API алдаа гарлаа");
-      }
-    };
+    recognition.onend = () => setListening(false);
   };
 
   return (
-    <div>
+    <div className="flex flex-col items-center gap-2">
       <button
-        onClick={recording ? stopRecording : startRecording}
-        className={`p-2 rounded ${recording ? "bg-red-500" : "bg-blue-500"} text-white`}
+        onClick={startListening}
+        className={`px-4 py-2 rounded-lg text-white ${listening ? "bg-red-500" : "bg-green-500"}`}
       >
-        {recording ? "Бичиж байна..." : "Микрофоноор унших"}
+        {listening ? "Listening..." : "Start Recording"}
       </button>
+      {text && <p className="mt-2 font-bold">💬 {text}</p>}
+    </div>
+  );
+};
 
-      {result && (
-        <p>
-          Танилцуулсан үг: <strong>{result}</strong>
-          {isCorrect !== null && (
-            <span className={isCorrect ? "text-green-600" : "text-red-600"}>
-              {isCorrect ? " (Зөв!)" : " (Буруу!)"}
-            </span>
-          )}
+export const WordCard: React.FC<Props> = ({ wordData, onNext }) => {
+  const { speakText } = useTextSpeaker();
+  const [slots, setSlots] = useState<(string | null)[]>([]);
+  const [showPopup, setShowPopup] = useState<string | null>(null);
+  const [audioText, setAudioText] = useState("");
+
+  const handleCheckOrNext = () => {
+    const currentWord = slots.filter(Boolean).join("");
+    const correct = currentWord === wordData.word;
+    setShowPopup(correct ? `🎉 Зөв байна! ${wordData.word} 🟢` : `😅 Буруу байна`);
+    setTimeout(() => setShowPopup(null), 2000);
+    if (correct) onNext(true);
+  };
+
+  const handleAudioResult = (spokenText: string) => {
+    setAudioText(spokenText);
+    if (spokenText.trim() === wordData.word) {
+      setShowPopup(`🎉 Зөв байна! ${spokenText} 🟢`);
+      setTimeout(() => setShowPopup(null), 2000);
+      onNext(true);
+    } else {
+      setShowPopup(`😅 Буруу байна: ${spokenText}`);
+      setTimeout(() => setShowPopup(null), 2000);
+    }
+  };
+
+  return (
+    <div className="bg-white rounded-2xl shadow-xl p-6 flex flex-col items-center w-full max-w-lg mx-auto">
+      {wordData.image && (
+        <div className="relative mb-4 group">
+          <Image
+            src={wordData.image}
+            alt={wordData.word}
+            width={200}
+            height={200}
+            className="object-contain rounded-lg shadow-md cursor-pointer"
+          />
+          <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 flex items-center justify-center rounded-lg transition-opacity">
+            <Volume2
+              onClick={() => speakText(wordData.word)}
+              className="text-white cursor-pointer"
+            />
+          </div>
+        </div>
+      )}
+
+      <DragDropWord
+        word={wordData.word}
+        letters={wordData.letters}
+        onSlotsChange={setSlots}
+      />
+
+      <div className="flex items-center justify-center gap-4 mt-4">
+        <button
+          onClick={handleCheckOrNext}
+          className="mt-4 px-6 py-2 rounded-full shadow-md text-lg font-bold bg-green-500 text-white hover:bg-green-600"
+        >
+          Шалгах
+        </button>
+      </div>
+
+      {/* 🎤 Web Speech API Recorder */}
+      <div className="mt-6 w-full">
+        <AudioRecorderWebSpeech onResult={handleAudioResult} />
+      </div>
+
+      {/* 🎯 Unshsan text дэлгэц дээр харуулах */}
+      {audioText && (
+        <p className="mt-4 text-lg font-bold text-center">
+          💬 Unshsan text: {audioText}
         </p>
+      )}
+
+      {showPopup && (
+        <div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none">
+          <div className="bg-white px-6 py-4 rounded-2xl shadow-2xl text-xl font-bold text-center transform transition-all duration-500 ease-out scale-110 -translate-y-4 opacity-100">
+            {showPopup}
+          </div>
+        </div>
       )}
     </div>
   );
