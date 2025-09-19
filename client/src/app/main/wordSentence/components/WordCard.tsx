@@ -64,12 +64,11 @@ export const WordCard: React.FC<Props> = ({ wordData, onNext }) => {
       >
         {isCorrect === null ? "Шалгах" : isCorrect ? "Дараах" : "Дахин эхлэх"}
       </button>
-      <Mic2 onClick={() => speakText(wordData.word)} className="text-black mt-6" />
+      <Mic2 className="text-black mt-6" />
 </div>
     
             {/* <AudioRecorder correctWord={wordData.word} /> */}
    
-
       {showPopup && (
         <div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none">
           <div className="bg-white px-6 py-4 rounded-2xl shadow-2xl text-xl font-bold text-center transform transition-all duration-500 ease-out scale-110 -translate-y-4 opacity-100">
