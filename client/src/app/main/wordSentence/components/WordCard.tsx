@@ -4,6 +4,7 @@ import { DragDropWord } from "./DragDropWord";
 import { AudioRecorder } from "./AudioRecorder";
 import Image from "next/image";
 import { useTextSpeaker } from "@/provider/TextContext";
+import { Mic, Mic2, Volume2 } from "lucide-react";
 
 interface Props {
   wordData: WordData;
@@ -43,16 +44,15 @@ export const WordCard: React.FC<Props> = ({ wordData, onNext }) => {
     
           />
           <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 flex items-center justify-center rounded-lg transition-opacity">
-            <span onClick={() => speakText(wordData.word)} className="text-white font-bold text-lg">{wordData.word}</span>
+            <Volume2 onClick={() => speakText(wordData.word)} className="text-white" />
           </div>
         </div>
       )}
 
       <DragDropWord word={wordData.word} letters={wordData.letters} onSlotsChange={setSlots} />
 
-      <AudioRecorder correctWord={wordData.word} />
-
-      <button
+<div className="flex item-center justify-center gap-4 mt-4">
+  <button
         onClick={handleCheckOrNext}
         className={`mt-4 px-6 py-2 rounded-full shadow-md text-lg font-bold transition ${
           isCorrect === null
@@ -64,7 +64,9 @@ export const WordCard: React.FC<Props> = ({ wordData, onNext }) => {
       >
         {isCorrect === null ? "Шалгах" : isCorrect ? "Дараах" : "Дахин эхлэх"}
       </button>
-
+</div>
+    
+   
       {showPopup && (
         <div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none">
           <div className="bg-white px-6 py-4 rounded-2xl shadow-2xl text-xl font-bold text-center transform transition-all duration-500 ease-out scale-110 -translate-y-4 opacity-100">
@@ -72,6 +74,8 @@ export const WordCard: React.FC<Props> = ({ wordData, onNext }) => {
           </div>
         </div>
       )}
+
+
     </div>
   );
 };
