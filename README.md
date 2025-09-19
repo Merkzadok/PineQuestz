@@ -28,7 +28,7 @@ Kids see a picture, hear the word (via Chimege TTS), and try to say it aloud. AI
 ### Installation
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/littlereader.git
+git clone https://github.com/Merkzadok/PineQuestz.git
 
 # Navigate into the project
 cd littlereader
