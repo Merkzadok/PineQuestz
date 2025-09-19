@@ -1,84 +1,96 @@
 "use client";
-import { useState, useRef } from "react";
 
-interface Props {
-  correctWord: string;
-}
+import React, { forwardRef, useImperativeHandle, useRef } from "react";
+import { ReactMediaRecorder } from "react-media-recorder";
 
-export const AudioRecorder: React.FC<Props> = ({ correctWord }) => {
-  const [recording, setRecording] = useState(false);
-  const [result, setResult] = useState("");
-  const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
+export type VoiceRecorderHandle = {
+  start: () => void;
+  stop: () => Promise<void>;
+};
 
-  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-  const audioChunksRef = useRef<Blob[]>([]);
+type Props = {
+  onUploadComplete?: (url: string | null) => void;
+};
 
-  const startRecording = async () => {
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    const mediaRecorder = new MediaRecorder(stream);
-    mediaRecorderRef.current = mediaRecorder;
-    audioChunksRef.current = [];
+type RecorderRenderProps = {
+  status: string;
+  startRecording: () => void;
+  stopRecording: () => void;
+  mediaBlob?: Blob | null;
+  mediaBlobUrl?: string | null;
+};
 
-    mediaRecorder.ondataavailable = (e) => {
-      if (e.data.size > 0) audioChunksRef.current.push(e.data);
-    };
+const VoiceRecorder = forwardRef<VoiceRecorderHandle, Props>(
+  ({ onUploadComplete }, ref) => {
+    const mediaBlobRef = useRef<Blob | null>(null);
+    const mediaBlobUrlRef = useRef<string | null>(null);
 
-    mediaRecorder.onstop = async () => {
-      const blob = new Blob(audioChunksRef.current, { type: "audio/webm" });
-      await sendToWhisper(blob);
-    };
+    let startRecordingInternal: () => void = () => {};
+    let stopRecordingInternal: () => void = () => {};
 
-    mediaRecorder.start();
-    setRecording(true);
-  };
+    useImperativeHandle(ref, () => ({
+      start: () => startRecordingInternal(),
+      stop: async () => {
+        stopRecordingInternal();
 
-  const stopRecording = () => {
-    mediaRecorderRef.current?.stop();
-    setRecording(false);
-  };
+        setTimeout(async () => {
+          const blob = mediaBlobRef.current;
+          if (blob) {
+            const url = await uploadToCloudinary(blob);
+            onUploadComplete?.(url);
+          } else if (mediaBlobUrlRef.current) {
+            try {
+              const response = await fetch(mediaBlobUrlRef.current);
+              const fetchedBlob = await response.blob();
+              const url = await uploadToCloudinary(fetchedBlob);
+              onUploadComplete?.(url);
+            } catch (error) {
+              onUploadComplete?.(null);
+            }
+          } else {
+            onUploadComplete?.(null);
+          }
+        }, 1000);
+      },
+    }));
 
-  const sendToWhisper = async (audioBlob: Blob) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(audioBlob);
-    reader.onloadend = async () => {
-      const base64 = reader.result!.toString().split(",")[1];
+    const uploadToCloudinary = async (blob: Blob): Promise<string | null> => {
+      const formData = new FormData();
+      formData.append("file", blob);
+      formData.append("upload_preset", "recordedAudo");
 
       try {
-        const res = await fetch("http://localhost:4001/api/whisper", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ audio: base64 }),
-        });
-        const data = await res.json();
-        const spokenText = (data.text || "").trim().toLowerCase();
-        setResult(spokenText);
-        setIsCorrect(spokenText === correctWord.toLowerCase());
-      } catch (err) {
-        console.error(err);
-        alert("Whisper API алдаа гарлаа");
+        const response = await fetch(
+          "https://api.cloudinary.com/v1_1/daywx3gsj/video/upload",
+          { method: "POST", body: formData }
+        );
+        const data: { secure_url?: string } = await response.json();
+        return data.secure_url ?? null;
+      } catch (error) {
+        return null;
       }
     };
-  };
 
-  return (
-    <div>
-      <button
-        onClick={recording ? stopRecording : startRecording}
-        className={`p-2 rounded ${recording ? "bg-red-500" : "bg-blue-500"} text-white`}
-      >
-        {recording ? "Бичиж байна..." : "Микрофоноор унших"}
-      </button>
+    return (
+      <ReactMediaRecorder
+        audio
+        render={(props: RecorderRenderProps) => {
+          const { startRecording, stopRecording, mediaBlob, mediaBlobUrl } =
+            props;
 
-      {result && (
-        <p>
-          Танилцуулсан үг: <strong>{result}</strong>
-          {isCorrect !== null && (
-            <span className={isCorrect ? "text-green-600" : "text-red-600"}>
-              {isCorrect ? " (Зөв!)" : " (Буруу!)"}
-            </span>
-          )}
-        </p>
-      )}
-    </div>
-  );
-};
+          startRecordingInternal = startRecording;
+          stopRecordingInternal = stopRecording;
+
+          if (mediaBlob) mediaBlobRef.current = mediaBlob;
+          if (mediaBlobUrl) mediaBlobUrlRef.current = mediaBlobUrl;
+
+          return <div className="hidden" />;
+        }}
+      />
+    );
+  }
+);
+
+VoiceRecorder.displayName = "VoiceRecorder";
+
+export default VoiceRecorder;
