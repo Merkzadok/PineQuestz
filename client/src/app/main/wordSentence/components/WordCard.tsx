@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { WordData } from "../utils/data";
-import { DragDropWord } from "./DragDropWord";
+import { DragDropWord, DragDropWordRef } from "./DragDropWord";
 import Image from "next/image";
 import { useTextSpeaker } from "@/provider/TextContext";
 import { Mic2, Volume2 } from "lucide-react";
@@ -10,32 +10,39 @@ interface Props {
   onNext: (correct: boolean) => void;
 }
 
-export const WordCard: React.FC<Props> = ({ wordData, onNext }) => {
+interface WordCardProps {
+  wordData: WordData;
+  onNext: (correct: boolean) => void;
+}
+
+export const WordCard: React.FC<WordCardProps> = ({ wordData, onNext }) => {
   const { speakText } = useTextSpeaker();
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const [slots, setSlots] = useState<(string | null)[]>([]);
   const [showPopup, setShowPopup] = useState<string | null>(null);
 
-  const handleCheckOrNext = () => {
-    if (isCorrect === null) {
-      const correct = slots.join("") === wordData.word;
-      setIsCorrect(correct);
-      setShowPopup(correct ? `🎉 Зөв байна! ${wordData.word} 🟢` : `😅 Буруу байна`);
-      setTimeout(() => setShowPopup(null), 2000);
-    } else if (isCorrect) {
-      onNext(true);
-      setIsCorrect(null);
-    } else {
-      setIsCorrect(null);
-    }
-  };
+  const dragDropRef = useRef<DragDropWordRef>(null);
 
-  // Slots дээрээс бүтсэн үгийг уншуулах
+const handleCheckOrNext = () => {
+  if (isCorrect === null) {
+    const correct = slots.join("") === wordData.word;
+    setIsCorrect(correct);
+    setShowPopup(correct ? `🎉 Зөв байна! ${wordData.word} 🟢` : `😅 Буруу байна`);
+    setTimeout(() => setShowPopup(null), 2000);
+  } else if (isCorrect) {
+    onNext(true);
+    setIsCorrect(null);
+    dragDropRef.current?.resetSlots(); 
+  } else {
+    setIsCorrect(null);
+    dragDropRef.current?.resetSlots(); 
+  }
+};
+
+
   const handleSpeakSlots = () => {
     const currentWord = slots.filter(Boolean).join("");
-    if (currentWord) {
-      speakText(currentWord);
-    }
+    if (currentWord) speakText(currentWord);
   };
 
   return (
@@ -50,7 +57,6 @@ export const WordCard: React.FC<Props> = ({ wordData, onNext }) => {
             className="object-contain rounded-lg shadow-md cursor-pointer"
           />
           <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 flex items-center justify-center rounded-lg transition-opacity">
-            {/* Зөв үгийг унших */}
             <Volume2
               onClick={() => speakText(wordData.word)}
               className="text-white cursor-pointer"
@@ -60,41 +66,37 @@ export const WordCard: React.FC<Props> = ({ wordData, onNext }) => {
       )}
 
       <DragDropWord
+        ref={dragDropRef}
         word={wordData.word}
         letters={wordData.letters}
         onSlotsChange={setSlots}
       />
 
-        {/* ✅ Slots-оор бүтсэн үгийг унших Volume товч */}
-        <Volume2
-          onClick={handleSpeakSlots}
-          className="w-10 h-10 text-green-600 cursor-pointer hover:text-green-800 transition"
-        />
+      <Volume2
+        onClick={handleSpeakSlots}
+        className="w-10 h-10 text-green-600 cursor-pointer hover:text-green-800 transition mb-4"
+      />
 
-      <div className="flex items-center justify-center gap-4 mt-4">
-        <button
-          onClick={handleCheckOrNext}
-          className={`mt-4 px-6 py-2 rounded-full shadow-md text-lg font-bold transition ${
-            isCorrect === null
-              ? "bg-green-500 text-white hover:bg-green-600"
-              : isCorrect
-              ? "bg-yellow-400 text-black hover:bg-yellow-500"
-              : "bg-blue-500 text-white hover:bg-blue-600"
-          }`}
-        >
-          {isCorrect === null ? "Шалгах" : isCorrect ? "Дараах" : "Дахин эхлэх"}
-        </button>
+      <button
+        onClick={handleCheckOrNext}
+        className={`mt-4 px-6 py-2 rounded-full shadow-md text-lg font-bold transition ${
+          isCorrect === null
+            ? "bg-green-500 text-white hover:bg-green-600"
+            : isCorrect
+            ? "bg-yellow-400 text-black hover:bg-yellow-500"
+            : "bg-blue-500 text-white hover:bg-blue-600"
+        }`}
+      >
+        {isCorrect === null ? "Шалгах" : isCorrect ? "Дараах" : "Дахин эхлэх"}
+      </button>
 
-        
-
-        {showPopup && (
-          <div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none">
-            <div className="bg-white px-6 py-4 rounded-2xl shadow-2xl text-xl font-bold text-center transform transition-all duration-500 ease-out scale-110 -translate-y-4 opacity-100">
-              {showPopup}
-            </div>
+      {showPopup && (
+        <div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none">
+          <div className="bg-white px-6 py-4 rounded-2xl shadow-2xl text-xl font-bold text-center transform transition-all duration-500 ease-out scale-110 -translate-y-4 opacity-100">
+            {showPopup}
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 };
