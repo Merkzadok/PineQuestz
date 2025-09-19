@@ -72,8 +72,6 @@ export const WordCard: React.FC<Props> = ({ wordData, onNext }) => {
           </div>
         </div>
       )}
-
-
     </div>
-  );
-};
+  </div>
+)};
