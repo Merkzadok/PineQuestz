@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { WordData } from "../utils/data";
 import { DragDropWord } from "./DragDropWord";
 import Image from "next/image";
@@ -10,7 +10,13 @@ interface Props {
   onNext: (correct: boolean) => void;
 }
 
+interface WordCardProps {
+  wordData: WordData;
+  onNext: (correct: boolean) => void;
+}
+
 export const WordCard: React.FC<Props> = ({ wordData, onNext }) => {
+  const dragDropRef = useRef<{ resetSlots: () => void }>(null);
   const { speakText } = useTextSpeaker();
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const [slots, setSlots] = useState<(string | null)[]>([]);
@@ -25,17 +31,16 @@ export const WordCard: React.FC<Props> = ({ wordData, onNext }) => {
     } else if (isCorrect) {
       onNext(true);
       setIsCorrect(null);
+      dragDropRef.current?.resetSlots();
     } else {
       setIsCorrect(null);
+      dragDropRef.current?.resetSlots();
     }
   };
 
-  // Slots дээрээс бүтсэн үгийг уншуулах
   const handleSpeakSlots = () => {
     const currentWord = slots.filter(Boolean).join("");
-    if (currentWord) {
-      speakText(currentWord);
-    }
+    if (currentWord) speakText(currentWord);
   };
 
   return (
@@ -50,26 +55,22 @@ export const WordCard: React.FC<Props> = ({ wordData, onNext }) => {
             className="object-contain rounded-lg shadow-md cursor-pointer"
           />
           <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 flex items-center justify-center rounded-lg transition-opacity">
-            {/* Зөв үгийг унших */}
-            <Volume2
-              onClick={() => speakText(wordData.word)}
-              className="text-white cursor-pointer"
-            />
+            <Volume2 onClick={() => speakText(wordData.word)} className="text-white cursor-pointer" />
           </div>
         </div>
       )}
 
       <DragDropWord
+        ref={dragDropRef}
         word={wordData.word}
         letters={wordData.letters}
         onSlotsChange={setSlots}
       />
 
-        {/* ✅ Slots-оор бүтсэн үгийг унших Volume товч */}
-        <Volume2
-          onClick={handleSpeakSlots}
-          className="w-10 h-10 text-green-600 cursor-pointer hover:text-green-800 transition"
-        />
+      <Volume2
+        onClick={handleSpeakSlots}
+        className="w-10 h-10 text-green-600 cursor-pointer hover:text-green-800 transition"
+      />
 
       <div className="flex items-center justify-center gap-4 mt-4">
         <button
@@ -85,8 +86,6 @@ export const WordCard: React.FC<Props> = ({ wordData, onNext }) => {
           {isCorrect === null ? "Шалгах" : isCorrect ? "Дараах" : "Дахин эхлэх"}
         </button>
 
-        
-
         {showPopup && (
           <div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none">
             <div className="bg-white px-6 py-4 rounded-2xl shadow-2xl text-xl font-bold text-center transform transition-all duration-500 ease-out scale-110 -translate-y-4 opacity-100">
@@ -98,3 +97,4 @@ export const WordCard: React.FC<Props> = ({ wordData, onNext }) => {
     </div>
   );
 };
+WordCard.displayName = "WordCard";
