@@ -15,7 +15,7 @@ export default function Sidebar() {
       label: "Roadmap",
       icon: Map,
       color: "text-cyan-600",
-      href: "/roadmap",
+      href: "/",
     },
     {
       id: "letters",
