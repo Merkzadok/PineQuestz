@@ -1,8 +1,18 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, forwardRef, useImperativeHandle } from "react";
 import { DndContext, useDraggable, useDroppable, DragEndEvent } from "@dnd-kit/core";
+import Image from "next/image";
+import { WordData } from "../utils/data";
+import { useTextSpeaker } from "@/provider/TextContext";
+import { Volume2 } from "lucide-react";
 
+interface Props {
+  wordData: WordData;
+  onNext: (correct: boolean) => void;
+}
+
+// ================= DragDropWord =================
 type PoolItem = { letter: string; id: string };
 
 interface DragDropWordProps {
@@ -11,7 +21,7 @@ interface DragDropWordProps {
   onSlotsChange?: (slots: (string | null)[]) => void;
 }
 
-const DraggableLetter = ({ id, letter }: PoolItem) => {
+export const DraggableLetter: React.FC<PoolItem> = ({ id, letter }) => {
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({ id });
   const style = {
     transform: transform ? `translate3d(${transform.x}px,${transform.y}px,0)` : undefined,
@@ -31,19 +41,16 @@ const DraggableLetter = ({ id, letter }: PoolItem) => {
     </div>
   );
 };
+DraggableLetter.displayName = "DraggableLetter";
 
-const DroppableSlot = ({
-  id,
-  letter,
-  onRemoveLetter,
-}: {
+interface DroppableSlotProps {
   id: string;
   letter: string | null;
   onRemoveLetter: () => void;
-}) => {
+}
+export const DroppableSlot: React.FC<DroppableSlotProps> = ({ id, letter, onRemoveLetter }) => {
   const { setNodeRef, isOver } = useDroppable({ id });
   const bg = letter ? "bg-gray-200" : isOver ? "bg-yellow-200 border-yellow-500" : "bg-gray-100 border-gray-300";
-
   return (
     <div
       ref={setNodeRef}
@@ -54,23 +61,28 @@ const DroppableSlot = ({
     </div>
   );
 };
+DroppableSlot.displayName = "DroppableSlot";
 
-export const DragDropWord: React.FC<DragDropWordProps> = ({ word, letters, onSlotsChange }) => {
+// forwardRef ашиглах замаар WordCard-аас reset хийх боломжтой
+export const DragDropWord = forwardRef<{
+  resetSlots: () => void;
+}, DragDropWordProps>(({ word, letters, onSlotsChange }, ref) => {
   const [slots, setSlots] = useState<(string | null)[]>([]);
   const [pool, setPool] = useState<PoolItem[]>([]);
 
   const initPool = () => letters.map((l, idx) => ({ letter: l, id: `${l}-${idx}-${Date.now()}` }));
 
-  const reset = () => {
+  const resetSlots = () => {
     setSlots(Array(word.length).fill(null));
     setPool(initPool());
   };
 
-  useEffect(() => reset(), [word, letters]);
+  useImperativeHandle(ref, () => ({
+    resetSlots,
+  }));
 
-  useEffect(() => {
-    onSlotsChange?.(slots);
-  }, [slots]);
+  useEffect(() => resetSlots(), [word, letters]);
+  useEffect(() => onSlotsChange?.(slots), [slots]);
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { over, active } = event;
@@ -79,28 +91,18 @@ export const DragDropWord: React.FC<DragDropWordProps> = ({ word, letters, onSlo
     const letter = letterId.split("-")[0];
 
     if (typeof over.id === "string") {
-      // Slot руу тавих
       if (over.id.startsWith("slot-")) {
         const slotIdx = parseInt(over.id.replace("slot-", ""), 10);
         if (!isNaN(slotIdx)) {
           const newSlots = [...slots];
-
-          // Хуучин үсэг байвал буцааж pool-д нэмэх
           if (newSlots[slotIdx]) {
             setPool((prev) => [...prev, { letter: newSlots[slotIdx]!, id: `${newSlots[slotIdx]}-${Date.now()}` }]);
           }
-
-          // Шинэ үсэг тавих
           newSlots[slotIdx] = letter;
           setSlots(newSlots);
-
-          // Pool-с устгах
           setPool((prev) => prev.filter((p) => p.id !== letterId));
         }
-      }
-
-      // Pool руу буцаах
-      else if (over.id === "pool") {
+      } else if (over.id === "pool") {
         const newSlots = [...slots];
         let removed = false;
         for (let i = 0; i < newSlots.length; i++) {
@@ -110,8 +112,6 @@ export const DragDropWord: React.FC<DragDropWordProps> = ({ word, letters, onSlo
           }
         }
         setSlots(newSlots);
-
-        // Pool-д нэмэх
         if (!pool.find((p) => p.id === letterId)) setPool((prev) => [...prev, { letter, id: letterId }]);
       }
     }
@@ -136,7 +136,6 @@ export const DragDropWord: React.FC<DragDropWordProps> = ({ word, letters, onSlo
           />
         ))}
       </div>
-
       {/* Pool */}
       <div id="pool" className="flex flex-wrap gap-2 mb-6 justify-center">
         {pool.map((item) => (
@@ -145,4 +144,5 @@ export const DragDropWord: React.FC<DragDropWordProps> = ({ word, letters, onSlo
       </div>
     </DndContext>
   );
-};
+});
+DragDropWord.displayName = "DragDropWord";
