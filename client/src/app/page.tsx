@@ -21,19 +21,19 @@ const sectionColors: Record<
   string,
   { bg: string; dark: string; accent: string }
 > = {
-  Letters: { bg: "bg-blue-100", dark: "bg-blue-500", accent: "bg-blue-200" },
+  Letters: { bg: "bg-cyan-200", dark: "bg-cyan-600", accent: "bg-cyan-300" },
   Colors: {
-    bg: "bg-purple-100",
-    dark: "bg-purple-500",
-    accent: "bg-purple-200",
+    bg: "bg-fuchsia-200",
+    dark: "bg-fuchsia-600",
+    accent: "bg-fuchsia-300",
   },
   Animals: {
-    bg: "bg-orange-100",
-    dark: "bg-orange-500",
-    accent: "bg-orange-200",
+    bg: "bg-orange-200",
+    dark: "bg-orange-600",
+    accent: "bg-orange-300",
   },
-  Food: { bg: "bg-green-100", dark: "bg-green-500", accent: "bg-green-200" },
-  Misc: { bg: "bg-pink-100", dark: "bg-pink-500", accent: "bg-pink-200" },
+  Food: { bg: "bg-lime-200", dark: "bg-lime-600", accent: "bg-lime-300" },
+  Misc: { bg: "bg-rose-200", dark: "bg-rose-600", accent: "bg-rose-300" },
 };
 
 const SectionSeparator = ({
@@ -48,7 +48,7 @@ const SectionSeparator = ({
   const getSectionImage = (section: string) => {
     switch (section) {
       case "Letters":
-        return "/images/apple.jpg";
+        return "/alphabet-blocks-colorful-letters-abc.jpg";
       case "Colors":
         return "/rainbow-color-palette-paint-brush.jpg";
       case "Animals":
@@ -72,19 +72,19 @@ const SectionSeparator = ({
       }}
     >
       <div className="relative">
-        <div className="w-20 h-20 rounded-full bg-white shadow-lg border-4 border-emerald-200 flex items-center justify-center mb-2">
+        <div className="w-28 h-28 rounded-full bg-white shadow-xl border-4 border-yellow-400 flex items-center justify-center mb-3">
           <img
             src={getSectionImage(section) || "/placeholder.svg"}
             alt={`${section} section`}
-            className="w-12 h-12 rounded-full"
+            className="w-20 h-20 rounded-full"
           />
         </div>
-        <div className="absolute -top-1 -right-1">
-          <Sparkles className="w-6 h-6 text-emerald-500" />
+        <div className="absolute -top-2 -right-2">
+          <Sparkles className="w-8 h-8 text-yellow-500" />
         </div>
       </div>
-      <div className="bg-white px-3 py-1 rounded-full shadow-md border border-emerald-200">
-        <span className="text-sm font-bold text-emerald-700">{section}</span>
+      <div className="bg-gradient-to-r from-yellow-300 to-orange-300 px-4 py-2 rounded-full shadow-lg border-2 border-white">
+        <span className="text-lg font-bold text-gray-800">{section}</span>
       </div>
     </div>
   );
@@ -121,10 +121,10 @@ export default function RoadMap() {
   ];
 
   const sectionSeparators = [
-    { section: "Letters", x: 40, y: 10 },
-    { section: "Colors", x: 45, y: 25 },
-    { section: "Animals", x: 55, y: 45 },
-    { section: "Food", x: 45, y: 65 },
+    { section: "Letters", x: 15, y: 8 },
+    { section: "Colors", x: 85, y: 25 },
+    { section: "Animals", x: 10, y: 45 },
+    { section: "Food", x: 90, y: 65 },
     { section: "Misc", x: 50, y: 85 },
   ];
 
@@ -154,16 +154,37 @@ export default function RoadMap() {
   };
 
   return (
-    <div className="relative w-full h-screen bg-gradient-to-br from-emerald-50 via-white to-blue-50 overflow-hidden">
+    <div className="relative w-full h-screen overflow-hidden">
+      <div
+        className="absolute inset-0 bg-cover bg-center"
+        style={{
+          backgroundImage: "url('/images/aaaaa.jpg')",
+          backgroundPosition: "center 20%",
+        }}
+      />
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-200/70 via-purple-100/60 to-pink-200/70" />
+
       <svg className="absolute w-full h-full">
         <defs>
+          <pattern
+            id="brickTexture"
+            patternUnits="userSpaceOnUse"
+            width="20"
+            height="10"
+          >
+            <rect width="20" height="10" fill="#8B4513" />
+            <rect x="0" y="0" width="10" height="5" fill="#A0522D" />
+            <rect x="10" y="5" width="10" height="5" fill="#A0522D" />
+            <rect x="0" y="5" width="10" height="5" fill="#CD853F" />
+            <rect x="10" y="0" width="10" height="5" fill="#CD853F" />
+          </pattern>
           <linearGradient id="pathGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#10b981" />
-            <stop offset="50%" stopColor="#059669" />
-            <stop offset="100%" stopColor="#047857" />
+            <stop offset="0%" stopColor="#FF6B35" />
+            <stop offset="50%" stopColor="#F7931E" />
+            <stop offset="100%" stopColor="#FFD23F" />
           </linearGradient>
           <filter id="glow">
-            <feGaussianBlur stdDeviation="3" result="coloredBlur" />
+            <feGaussianBlur stdDeviation="4" result="coloredBlur" />
             <feMerge>
               <feMergeNode in="coloredBlur" />
               <feMergeNode in="SourceGraphic" />
@@ -179,38 +200,37 @@ export default function RoadMap() {
 
           return (
             <g key={level.id}>
-              {/* Road base */}
               <line
                 x1={`${prev.x}%`}
                 y1={`${prev.y}%`}
                 x2={`${level.x}%`}
                 y2={`${level.y}%`}
-                stroke="#e5e7eb"
-                strokeWidth="12"
+                stroke="#654321"
+                strokeWidth="16"
                 strokeLinecap="round"
               />
-              {/* Road surface */}
               <line
                 x1={`${prev.x}%`}
                 y1={`${prev.y}%`}
                 x2={`${level.x}%`}
                 y2={`${level.y}%`}
-                stroke={isCompleted ? "url(#pathGradient)" : "#d1d5db"}
-                strokeWidth="8"
+                stroke={
+                  isCompleted ? "url(#pathGradient)" : "url(#brickTexture)"
+                }
+                strokeWidth="12"
                 strokeLinecap="round"
                 filter={isCompleted ? "url(#glow)" : "none"}
                 className={isCompleted ? "animate-pulse" : ""}
               />
-              {/* Road center line */}
               <line
                 x1={`${prev.x}%`}
                 y1={`${prev.y}%`}
                 x2={`${level.x}%`}
                 y2={`${level.y}%`}
-                stroke="white"
-                strokeWidth="2"
+                stroke="#FFD700"
+                strokeWidth="3"
                 strokeLinecap="round"
-                strokeDasharray="8,4"
+                strokeDasharray="12,6"
               />
             </g>
           );
@@ -230,18 +250,18 @@ export default function RoadMap() {
         const status = getLevelStatus(level);
         const color = sectionColors[level.section];
 
-        let bgClass = `${color.bg} border-gray-300`;
-        let iconColor = "text-gray-400";
-        let shadowClass = "shadow-md";
+        let bgClass = `${color.bg} border-gray-400`;
+        let iconColor = "text-gray-600";
+        let shadowClass = "shadow-lg";
 
         if (status === "completed") {
-          bgClass = "bg-emerald-100 border-emerald-400";
-          iconColor = "text-emerald-600";
-          shadowClass = "shadow-lg shadow-emerald-200";
+          bgClass = "bg-emerald-200 border-emerald-500";
+          iconColor = "text-emerald-700";
+          shadowClass = "shadow-xl shadow-emerald-300";
         } else if (status === "current") {
-          bgClass = `${color.dark} border-white`;
+          bgClass = `${color.dark} border-yellow-400`;
           iconColor = "text-white";
-          shadowClass = "shadow-xl shadow-blue-300";
+          shadowClass = "shadow-2xl shadow-yellow-400";
         }
 
         return (
@@ -257,37 +277,36 @@ export default function RoadMap() {
             <button
               onClick={() => handleLevelClick(level)}
               disabled={status === "locked"}
-              className={`relative w-16 h-16 rounded-full border-4 flex items-center justify-center transition-all duration-300 hover:scale-110 ${bgClass} ${shadowClass} ${
+              className={`relative w-18 h-18 rounded-full border-4 flex items-center justify-center transition-all duration-300 hover:scale-110 ${bgClass} ${shadowClass} ${
                 status !== "locked"
                   ? "hover:shadow-2xl cursor-pointer"
                   : "cursor-not-allowed"
               }`}
             >
               {status === "completed" ? (
-                <CheckCircle className={`w-7 h-7 ${iconColor}`} />
+                <CheckCircle className={`w-8 h-8 ${iconColor}`} />
               ) : status === "current" ? (
                 <>
-                  <span className={`text-lg font-bold ${iconColor}`}>
+                  <span className={`text-xl font-bold ${iconColor}`}>
                     {level.id}
                   </span>
-                  <Star className="absolute -top-2 -right-2 w-5 h-5 text-yellow-400 animate-bounce" />
+                  <Star className="absolute -top-3 -right-3 w-6 h-6 text-yellow-400 animate-bounce" />
                 </>
               ) : (
-                <Lock className={`w-5 h-5 ${iconColor}`} />
+                <Lock className={`w-6 h-6 ${iconColor}`} />
               )}
 
-              {/* Pulse animation for current level */}
               {status === "current" && (
-                <div className="absolute inset-0 rounded-full border-4 border-blue-400 animate-ping opacity-75"></div>
+                <div className="absolute inset-0 rounded-full border-4 border-yellow-400 animate-ping opacity-75"></div>
               )}
             </button>
             <span
-              className={`mt-2 text-sm font-bold px-2 py-1 rounded-full ${
+              className={`mt-2 text-sm font-bold px-3 py-1 rounded-full ${
                 status === "completed"
-                  ? "bg-emerald-100 text-emerald-700"
+                  ? "bg-emerald-200 text-emerald-800"
                   : status === "current"
-                  ? "bg-blue-100 text-blue-700"
-                  : "bg-gray-100 text-gray-500"
+                  ? "bg-yellow-200 text-yellow-800"
+                  : "bg-gray-200 text-gray-600"
               }`}
             >
               {level.id}
@@ -296,14 +315,14 @@ export default function RoadMap() {
         );
       })}
 
-      <div className="absolute top-10 left-10 w-8 h-8 bg-yellow-200 rounded-full opacity-60 animate-bounce"></div>
-      <div className="absolute top-20 right-20 w-6 h-6 bg-pink-200 rounded-full opacity-60 animate-pulse"></div>
+      <div className="absolute top-10 left-10 w-10 h-10 bg-yellow-300 rounded-full opacity-70 animate-bounce"></div>
+      <div className="absolute top-20 right-20 w-8 h-8 bg-pink-300 rounded-full opacity-70 animate-pulse"></div>
       <div
-        className="absolute bottom-20 left-20 w-10 h-10 bg-blue-200 rounded-full opacity-60 animate-bounce"
+        className="absolute bottom-20 left-20 w-12 h-12 bg-blue-300 rounded-full opacity-70 animate-bounce"
         style={{ animationDelay: "1s" }}
       ></div>
       <div
-        className="absolute bottom-10 right-10 w-7 h-7 bg-purple-200 rounded-full opacity-60 animate-pulse"
+        className="absolute bottom-10 right-10 w-9 h-9 bg-purple-300 rounded-full opacity-70 animate-pulse"
         style={{ animationDelay: "2s" }}
       ></div>
     </div>
