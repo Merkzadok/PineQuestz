@@ -4,6 +4,7 @@ import "./globals.css";
 import { TextSpeakerProvider } from "@/provider/TextContext";
 import AnimatedWrapper from "@/app/components/Animated-wrapper";
 import MainHeader from "./components/MainHeader";
+import Sidebar from "./components/SideBar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -36,8 +37,17 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <TextSpeakerProvider>
-          <MainHeader />
-          <AnimatedWrapper>{children}</AnimatedWrapper>
+          <div className="flex h-screen">
+            {/* Sidebar - fixed left side */}
+            <aside className="w-64 bg-gray-100 shadow-md p-4 fixed h-full left-0 top-0">
+              <Sidebar />
+            </aside>
+
+            {/* Main content - shifted right */}
+            <main className="flex-1 ml-64 overflow-y-auto">
+              <AnimatedWrapper>{children}</AnimatedWrapper>
+            </main>
+          </div>
         </TextSpeakerProvider>
       </body>
     </html>
