@@ -2,6 +2,8 @@
 import { useState, useEffect } from "react";
 import { words as allWords, WordData } from "./utils/data";
 import { WordCard } from "./components/WordCard";
+import { ProgressBar } from "./components/ProgressBar";
+import { StreakDisplay } from "./components/StreakDisplay";
 
 export default function Home() {
   const [words, setWords] = useState<WordData[]>([]);
@@ -9,17 +11,13 @@ export default function Home() {
   const [streak, setStreak] = useState(0);
 
   useEffect(() => {
-    setWords(shuffleArray(allWords));
+    setWords((allWords));
   }, []);
 
-const handleNext = (correct: boolean) => {
-  console.log("Correct:", correct);
-
-  setStreak((prev) => (correct ? prev + 1 : 0));
-
-  setCurrentIndex((prev) => (prev + 1 < words.length ? prev + 1 : words.length));
-};
-
+  const handleNext = (correct: boolean) => {
+    setStreak((prev) => (correct ? prev + 1 : 0));
+    setCurrentIndex((prev) => (prev + 1 < words.length ? prev + 1 : words.length));
+  };
 
   if (!words.length)
     return (
@@ -31,12 +29,9 @@ const handleNext = (correct: boolean) => {
   if (currentIndex >= words.length)
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-blue-100 to-blue-50 px-4">
-        <p className="text-3xl font-bold mb-4 text-green-600">
-          🎉 Тоглолт дууслаа!
-        </p>
+        <p className="text-3xl font-bold mb-4 text-green-600">🎉 Тоглолт дууслаа!</p>
         <p className="text-xl text-gray-700">
-          Таны Streak:{" "}
-          <span className="font-semibold text-green-600">{streak}</span>
+          Таны Streak: <span className="font-semibold text-green-600">{streak}</span>
         </p>
         <button
           onClick={() => {
@@ -50,45 +45,23 @@ const handleNext = (correct: boolean) => {
       </div>
     );
 
-  const progressPercent = (currentIndex / words.length) * 100;
-
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-100 to-blue-50 flex flex-col items-center justify-start px-4 pt-8">
       {/* Progress bar */}
-      <div className="w-full max-w-md mb-6">
-        <div className="w-full h-4 bg-blue-200 rounded-full overflow-hidden shadow-inner">
-          <div
-            className="h-4 bg-green-400 rounded-full transition-all duration-500"
-            style={{ width: `${progressPercent}%` }}
-          ></div>
-        </div>
-        <p className="text-sm text-gray-600 mt-1 text-right">
-          {currentIndex} / {words.length} үг
-        </p>
-      </div>
+      <ProgressBar currentIndex={currentIndex} total={words.length} />
 
       {/* Streak display */}
-      <div className="mb-6 w-full max-w-md flex justify-between items-center bg-white shadow-lg rounded-2xl px-6 py-4 border border-gray-200">
-        <p className="text-lg font-semibold text-gray-700">Streak:</p>
-        <p className="text-2xl font-bold text-green-600">{streak}</p>
-      </div>
+      <StreakDisplay streak={streak} />
 
       {/* Word card */}
       <div className="w-full max-w-md">
-<WordCard
-  key={words[currentIndex].id}
-  wordData={words[currentIndex]}
-  onNext={(correct: boolean) => handleNext(correct)}
-/>
+        <WordCard
+          key={words[currentIndex].id}
+          wordData={words[currentIndex]}
+          onNext={handleNext}
+        />
       </div>
     </div>
   );
 }
 
-// shuffle helper
-const shuffleArray = <T,>(arr: T[]): T[] => {
-  return arr
-    .map((v) => ({ v, sort: Math.random() }))
-    .sort((a, b) => a.sort - b.sort)
-    .map(({ v }) => v);
-};
