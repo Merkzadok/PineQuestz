@@ -17,6 +17,7 @@ export default function Home() {
   const handleNext = (correct: boolean) => {
     setStreak((prev) => (correct ? prev + 1 : 0));
     setCurrentIndex((prev) => (prev + 1 < words.length ? prev + 1 : words.length));
+
   };
 
   if (!words.length)
@@ -59,6 +60,7 @@ export default function Home() {
           key={words[currentIndex].id}
           wordData={words[currentIndex]}
           onNext={handleNext}
+
         />
       </div>
     </div>

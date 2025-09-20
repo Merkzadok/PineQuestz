@@ -1,9 +1,9 @@
 "use client";
 import { useParams } from "next/navigation";
-import CrossWordLevel1 from "../components/CrossWordLevel1";
-import CrossWordLevel2 from "../components/CrossWordLevel2";
+import CrossWordLevel1 from "../components/Level1";
+import CrossWordLevel2 from "../components/Level2";
 import { JSX } from "react";
-import CrossWordLevelA from "../components/CrossWordLevelA";
+import CrossWordLevelA from "../components/LevelA";
 
 const CrossWordPage = () => {
   const params = useParams();
