@@ -12,14 +12,15 @@ export default function Home() {
     setWords(shuffleArray(allWords));
   }, []);
 
-const handleNext = (correct: boolean) => {
-  console.log("Correct:", correct);
+  const handleNext = (correct: boolean) => {
+    console.log("Correct:", correct);
 
-  setStreak((prev) => (correct ? prev + 1 : 0));
+    setStreak((prev) => (correct ? prev + 1 : 0));
 
-  setCurrentIndex((prev) => (prev + 1 < words.length ? prev + 1 : words.length));
-};
-
+    setCurrentIndex((prev) =>
+      prev + 1 < words.length ? prev + 1 : words.length
+    );
+  };
 
   if (!words.length)
     return (
@@ -75,11 +76,11 @@ const handleNext = (correct: boolean) => {
 
       {/* Word card */}
       <div className="w-full max-w-md">
-<WordCard
-  key={words[currentIndex].id}
-  wordData={words[currentIndex]}
-  onNext={(correct: boolean) => handleNext(correct)}
-/>
+        <WordCard
+          key={words[currentIndex].id}
+          wordData={words[currentIndex]}
+          onNext={(correct: boolean) => handleNext(correct)}
+        />
       </div>
     </div>
   );
