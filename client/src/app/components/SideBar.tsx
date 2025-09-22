@@ -22,7 +22,7 @@ export default function Sidebar() {
       label: "Letters",
       icon: BookOpen,
       color: "text-purple-600",
-      href: "/letters",
+      href: "/main/letters",
     },
     {
       id: "achievements",
