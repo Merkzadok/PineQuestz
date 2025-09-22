@@ -7,7 +7,6 @@ type Props = {
   onCorrect?: () => void;
 };
 
-// ---- Web Speech API төрлүүд ----
 interface SpeechRecognitionEvent extends Event {
   resultIndex: number;
   results: SpeechRecognitionResultList;
@@ -30,7 +29,6 @@ declare global {
     SpeechRecognition: new () => ISpeechRecognition;
   }
 }
-// ---- END төрлүүд ----
 
 const VoiceTranscriber: React.FC<Props> = ({ targetWord, onCorrect }) => {
   const [transcript, setTranscript] = useState("");
@@ -43,7 +41,7 @@ const VoiceTranscriber: React.FC<Props> = ({ targetWord, onCorrect }) => {
         window.SpeechRecognition || window.webkitSpeechRecognition;
 
       const recognition = new SpeechRecognition();
-      recognition.lang = "mn-MN"; // монгол хэл
+      recognition.lang = "mn-MN"; 
       recognition.continuous = true;
       recognition.interimResults = true;
 
