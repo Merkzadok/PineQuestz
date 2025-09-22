@@ -95,7 +95,7 @@ const VoiceTranscriber: React.FC<Props> = ({ targetWord, onCorrect }) => {
       <button
         onClick={listening ? stopListening : startListening}
         className={`px-5 py-2 rounded-full text-white font-semibold ${
-          listening ? "bg-red-500" : "bg-green-500"
+          listening ? "bg-red-500" : "bg-green-400"
         }`}
       >
         {listening ? "⏹ Зогсоох" : "🎤 Ярих"}

@@ -72,7 +72,17 @@ export const WordCard: React.FC<Props> = ({ wordData, onNext }) => {
         onClick={handleSpeakSlots}
         className="w-10 h-10 text-green-600 cursor-pointer hover:text-green-800 transition"
       />
+
    <div className="w-full flex flex-col item-center">
+
+       {/* 🎤 Speech-to-Text */}
+        <div className="flex flex-col items-center mt-4">   
+          <VoiceTranscriber
+        targetWord={wordData.word}
+        onCorrect={handleCorrectSpeech}
+      />
+        </div>
+        
     <div className="flex flex-col items-center mt-4 ">
         <button
           onClick={handleCheckOrNext}
@@ -87,13 +97,7 @@ export const WordCard: React.FC<Props> = ({ wordData, onNext }) => {
           {isCorrect === null ? "Шалгах" : isCorrect ? "Дараах" : "Дахин эхлэх"}
         </button>
 
-        {/* 🎤 Speech-to-Text */}
-        <div className="flex flex-col items-center mt-4">   
-          <VoiceTranscriber
-        targetWord={wordData.word}
-        onCorrect={handleCorrectSpeech}
-      />
-        </div>
+     
 </div>
 
         {showPopup && (
