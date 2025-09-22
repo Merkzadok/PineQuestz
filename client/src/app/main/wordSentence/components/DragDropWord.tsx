@@ -2,17 +2,13 @@
 
 import { useState, useEffect, useRef, forwardRef, useImperativeHandle } from "react";
 import { DndContext, useDraggable, useDroppable, DragEndEvent } from "@dnd-kit/core";
-import Image from "next/image";
 import { WordData } from "../utils/data";
-import { useTextSpeaker } from "@/provider/TextContext";
-import { Volume2 } from "lucide-react";
 
 interface Props {
   wordData: WordData;
   onNext: (correct: boolean) => void;
 }
 
-// ================= DragDropWord =================
 type PoolItem = { letter: string; id: string };
 
 interface DragDropWordProps {
@@ -63,7 +59,6 @@ export const DroppableSlot: React.FC<DroppableSlotProps> = ({ id, letter, onRemo
 };
 DroppableSlot.displayName = "DroppableSlot";
 
-// forwardRef ашиглах замаар WordCard-аас reset хийх боломжтой
 export const DragDropWord = forwardRef<{
   resetSlots: () => void;
 }, DragDropWordProps>(({ word, letters, onSlotsChange }, ref) => {
