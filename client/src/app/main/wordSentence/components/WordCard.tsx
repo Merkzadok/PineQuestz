@@ -3,7 +3,8 @@ import { WordData } from "../utils/data";
 import { DragDropWord } from "./DragDropWord";
 import Image from "next/image";
 import { useTextSpeaker } from "@/provider/TextContext";
-import { Mic2, Volume2 } from "lucide-react";
+import { Volume2 } from "lucide-react";
+import VoiceTranscriber from "./VoiceTranscriber";
 
 interface Props {
   wordData: WordData;
@@ -16,6 +17,11 @@ export const WordCard: React.FC<Props> = ({ wordData, onNext }) => {
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const [slots, setSlots] = useState<(string | null)[]>([]);
   const [showPopup, setShowPopup] = useState<string | null>(null);
+
+    const handleCorrectSpeech = () => {
+    alert("🎉 Баяр хүргэе! Чи зөв хэллээ.");
+    onNext(true); // streak нэмэх г.м.
+  };
 
   const handleCheckOrNext = () => {
     if (isCorrect === null) {
@@ -66,8 +72,8 @@ export const WordCard: React.FC<Props> = ({ wordData, onNext }) => {
         onClick={handleSpeakSlots}
         className="w-10 h-10 text-green-600 cursor-pointer hover:text-green-800 transition"
       />
-
-      <div className="flex items-center justify-center gap-4 mt-4">
+   <div className="w-full flex flex-col item-center">
+    <div className="flex flex-col items-center mt-4 ">
         <button
           onClick={handleCheckOrNext}
           className={`mt-4 px-6 py-2 rounded-full shadow-md text-lg font-bold transition ${
@@ -80,6 +86,15 @@ export const WordCard: React.FC<Props> = ({ wordData, onNext }) => {
         >
           {isCorrect === null ? "Шалгах" : isCorrect ? "Дараах" : "Дахин эхлэх"}
         </button>
+
+        {/* 🎤 Speech-to-Text */}
+        <div className="flex flex-col items-center mt-4">   
+          <VoiceTranscriber
+        targetWord={wordData.word}
+        onCorrect={handleCorrectSpeech}
+      />
+        </div>
+</div>
 
         {showPopup && (
           <div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none">
