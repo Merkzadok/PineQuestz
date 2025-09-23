@@ -18,17 +18,18 @@ export const WordCard: React.FC<Props> = ({ wordData, onNext }) => {
   const [slots, setSlots] = useState<(string | null)[]>([]);
   const [showPopup, setShowPopup] = useState<string | null>(null);
 
-const handleCorrectSpeech = () => {
-  alert("🎉 Баяр хүргэе! Чи зөв хэллээ.");
-  setTimeout(() => onNext(true), 300); 
-};
-
+  const handleCorrectSpeech = () => {
+    alert("🎉 Баяр хүргэе! Чи зөв хэллээ.");
+    setTimeout(() => onNext(true), 300);
+  };
 
   const handleCheckOrNext = () => {
     if (isCorrect === null) {
       const correct = slots.join("") === wordData.word;
       setIsCorrect(correct);
-      setShowPopup(correct ? `🎉 Зөв байна! ${wordData.word} 🟢` : `😅 Буруу байна`);
+      setShowPopup(
+        correct ? `🎉 Зөв байна! ${wordData.word} 🟢` : `😅 Буруу байна`
+      );
       setTimeout(() => setShowPopup(null), 2000);
     } else if (isCorrect) {
       onNext(true);
@@ -47,13 +48,13 @@ const handleCorrectSpeech = () => {
 
   return (
     <div className="bg-white rounded-2xl shadow-xl p-6 flex flex-col items-center w-full max-w-lg mx-auto">
-   <div className="flex items-center justify-center space-x- p-4 rounded-2xl shadow-lg">
-  <Target className="w-12 h-12 text-gray-600 animate-bounce" />
-  <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-green-500 text-center">
-    Үг бүтээх тоглоом
-  </h1>
-  <Target className="w-12 h-12 text-gray-600 animate-bounce" />
-</div>
+      <div className="flex items-center justify-center space-x- p-4 rounded-2xl shadow-lg">
+        <Target className="w-12 h-12 text-gray-600 animate-bounce" />
+        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-green-500 text-center">
+          Үг бүтээх тоглоом
+        </h1>
+        <Target className="w-12 h-12 text-gray-600 animate-bounce" />
+      </div>
 
       {/* Image and text to speech */}
       {wordData.image && (
@@ -66,11 +67,14 @@ const handleCorrectSpeech = () => {
             className="object-contain rounded-lg shadow-md cursor-pointer"
           />
           <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 flex items-center justify-center rounded-lg transition-opacity">
-            <Volume2 onClick={() => speakText(wordData.word)} className="text-white cursor-pointer" />
+            <Volume2
+              onClick={() => speakText(wordData.word)}
+              className="text-white cursor-pointer"
+            />
           </div>
         </div>
       )}
-    {/* Display letters drag and drop */}
+      {/* Display letters drag and drop */}
       <DragDropWord
         ref={dragDropRef}
         word={wordData.word}
@@ -78,38 +82,42 @@ const handleCorrectSpeech = () => {
         onSlotsChange={setSlots}
       />
 
-     {/* Pool text to speech */}
+      {/* Pool text to speech */}
       <Volume2
         onClick={handleSpeakSlots}
         className="w-10 h-10 text-green-600 cursor-pointer hover:text-green-800 transition"
       />
 
-   <div className="w-full flex flex-col item-center">
-       {/* 🎤 Speech-to-Text */}
-        <div className="flex flex-col items-center mt-4">   
+      <div className="w-full flex flex-col item-center">
+        {/* 🎤 Speech-to-Text */}
+        <div className="flex flex-col items-center mt-4">
           <VoiceTranscriber
-        targetWord={wordData.word}
-        onCorrect={handleCorrectSpeech}
-      />
+            targetWord={wordData.word}
+            onCorrect={handleCorrectSpeech}
+          />
         </div>
 
-        {/* Check/Next button */}  
-    <div className="flex flex-col items-center mt-4 ">
-        <button
-          onClick={handleCheckOrNext}
-          className={`mt-4 px-6 py-2 rounded-full shadow-md text-lg font-bold transition ${
-            isCorrect === null
-              ? "bg-green-500 text-white hover:bg-green-600"
+        {/* Check/Next button */}
+        <div className="flex flex-col items-center mt-4 ">
+          <button
+            onClick={handleCheckOrNext}
+            className={`mt-4 px-6 py-2 rounded-full shadow-md text-lg font-bold transition ${
+              isCorrect === null
+                ? "bg-green-500 text-white hover:bg-green-600"
+                : isCorrect
+                ? "bg-yellow-400 text-black hover:bg-yellow-500"
+                : "bg-blue-500 text-white hover:bg-blue-600"
+            }`}
+          >
+            {isCorrect === null
+              ? "Шалгах"
               : isCorrect
-              ? "bg-yellow-400 text-black hover:bg-yellow-500"
-              : "bg-blue-500 text-white hover:bg-blue-600"
-          }`}
-        >
-          {isCorrect === null ? "Шалгах" : isCorrect ? "Дараах" : "Дахин эхлэх"}
-        </button> 
-     </div>
+              ? "Дараах"
+              : "Дахин эхлэх"}
+          </button>
+        </div>
 
-      {/* Pop up message */}
+        {/* Pop up message */}
         {showPopup && (
           <div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none">
             <div className="bg-white px-6 py-4 rounded-2xl shadow-2xl text-xl font-bold text-center transform transition-all duration-500 ease-out scale-110 -translate-y-4 opacity-100">

@@ -8,9 +8,9 @@ interface Level {
   id: number;
   route: string;
   section: string;
-  x: number; 
+  x: number;
   y: number;
-  gameType: 'wordcard' | 'crossword';
+  gameType: "wordcard" | "crossword";
 }
 
 interface LessonProgress {
@@ -20,11 +20,19 @@ interface LessonProgress {
 
 const sectionColors: Record<
   string,
-  { bg: string; dark: string; accent:string }
+  { bg: string; dark: string; accent: string }
 > = {
   WordCard: { bg: "bg-cyan-200", dark: "bg-cyan-600", accent: "bg-cyan-300" },
-  CrossWord: { bg: "bg-fuchsia-200", dark: "bg-fuchsia-600", accent: "bg-fuchsia-300" },
-  Colors: { bg: "bg-orange-200", dark: "bg-orange-600", accent: "bg-orange-300" },
+  CrossWord: {
+    bg: "bg-fuchsia-200",
+    dark: "bg-fuchsia-600",
+    accent: "bg-fuchsia-300",
+  },
+  Colors: {
+    bg: "bg-orange-200",
+    dark: "bg-orange-600",
+    accent: "bg-orange-300",
+  },
   Animals: { bg: "bg-lime-200", dark: "bg-lime-600", accent: "bg-lime-300" },
   Food: { bg: "bg-rose-200", dark: "bg-rose-600", accent: "bg-rose-300" },
 };
@@ -70,26 +78,166 @@ export default function RoadMap() {
   const [lessonProgress, setLessonProgress] = useState<LessonProgress[]>([]);
 
   const levels: Level[] = [
-    { id: 1, route: "/main/wordcard/0", section: "WordCard", x: 10, y: 85, gameType: 'wordcard' },
-    { id: 2, route: "/main/wordcard/1", section: "WordCard", x: 25, y: 75, gameType: 'wordcard' },
-    { id: 3, route: "/main/wordcard/2", section: "WordCard", x: 40, y: 85, gameType: 'wordcard' },
-    { id: 4, route: "/main/wordcard/3", section: "WordCard", x: 55, y: 75, gameType: 'wordcard' },
-    { id: 5, route: "/main/crossword/0", section: "CrossWord", x: 70, y: 85, gameType: 'crossword' },
-    { id: 6, route: "/main/wordcard/4", section: "WordCard", x: 85, y: 70, gameType: 'wordcard' },
-    { id: 7, route: "/main/wordcard/5", section: "WordCard", x: 70, y: 55, gameType: 'wordcard' },
-    { id: 8, route: "/main/wordcard/6", section: "WordCard", x: 55, y: 70, gameType: 'wordcard' },
-    { id: 9, route: "/main/wordcard/7", section: "WordCard", x: 40, y: 55, gameType: 'wordcard' },
-    { id: 10, route: "/main/crossword/1", section: "CrossWord", x: 25, y: 45, gameType: 'crossword' },
-    { id: 11, route: "/main/wordcard/8", section: "WordCard", x: 40, y: 35, gameType: 'wordcard' },
-    { id: 12, route: "/main/wordcard/9", section: "WordCard", x: 55, y: 25, gameType: 'wordcard' },
-    { id: 13, route: "/main/wordcard/10", section: "WordCard", x: 70, y: 35, gameType: 'wordcard' },
-    { id: 14, route: "/main/wordcard/11", section: "WordCard", x: 85, y: 25, gameType: 'wordcard' },
-    { id: 15, route: "/main/crossword/2", section: "CrossWord", x: 75, y: 15, gameType: 'crossword' },
-    { id: 16, route: "/main/wordcard/12", section: "WordCard", x: 60, y: 5, gameType: 'wordcard' },
-    { id: 17, route: "/main/wordcard/13", section: "WordCard", x: 45, y: 15, gameType: 'wordcard' },
-    { id: 18, route: "/main/wordcard/14", section: "WordCard", x: 30, y: 5, gameType: 'wordcard' },
-    { id: 19, route: "/main/wordcard/15", section: "WordCard", x: 15, y: 15, gameType: 'wordcard' },
-    { id: 20, route: "/main/crossword/3", section: "CrossWord", x: 10, y: 30, gameType: 'crossword' }
+    {
+      id: 1,
+      route: "/main/wordcard/0",
+      section: "WordCard",
+      x: 10,
+      y: 85,
+      gameType: "wordcard",
+    },
+    {
+      id: 2,
+      route: "/main/wordcard/1",
+      section: "WordCard",
+      x: 25,
+      y: 75,
+      gameType: "wordcard",
+    },
+    {
+      id: 3,
+      route: "/main/wordcard/2",
+      section: "WordCard",
+      x: 40,
+      y: 85,
+      gameType: "wordcard",
+    },
+    {
+      id: 4,
+      route: "/main/wordcard/3",
+      section: "WordCard",
+      x: 55,
+      y: 75,
+      gameType: "wordcard",
+    },
+    {
+      id: 5,
+      route: "/main/crossword/0",
+      section: "CrossWord",
+      x: 70,
+      y: 85,
+      gameType: "crossword",
+    },
+    {
+      id: 6,
+      route: "/main/wordcard/4",
+      section: "WordCard",
+      x: 85,
+      y: 70,
+      gameType: "wordcard",
+    },
+    {
+      id: 7,
+      route: "/main/wordcard/5",
+      section: "WordCard",
+      x: 70,
+      y: 55,
+      gameType: "wordcard",
+    },
+    {
+      id: 8,
+      route: "/main/wordcard/6",
+      section: "WordCard",
+      x: 55,
+      y: 70,
+      gameType: "wordcard",
+    },
+    {
+      id: 9,
+      route: "/main/wordcard/7",
+      section: "WordCard",
+      x: 40,
+      y: 55,
+      gameType: "wordcard",
+    },
+    {
+      id: 10,
+      route: "/main/crossword/1",
+      section: "CrossWord",
+      x: 25,
+      y: 45,
+      gameType: "crossword",
+    },
+    {
+      id: 11,
+      route: "/main/wordcard/8",
+      section: "WordCard",
+      x: 40,
+      y: 35,
+      gameType: "wordcard",
+    },
+    {
+      id: 12,
+      route: "/main/wordcard/9",
+      section: "WordCard",
+      x: 55,
+      y: 25,
+      gameType: "wordcard",
+    },
+    {
+      id: 13,
+      route: "/main/wordcard/10",
+      section: "WordCard",
+      x: 70,
+      y: 35,
+      gameType: "wordcard",
+    },
+    {
+      id: 14,
+      route: "/main/wordcard/11",
+      section: "WordCard",
+      x: 85,
+      y: 25,
+      gameType: "wordcard",
+    },
+    {
+      id: 15,
+      route: "/main/crossword/2",
+      section: "CrossWord",
+      x: 75,
+      y: 15,
+      gameType: "crossword",
+    },
+    {
+      id: 16,
+      route: "/main/wordcard/12",
+      section: "WordCard",
+      x: 60,
+      y: 5,
+      gameType: "wordcard",
+    },
+    {
+      id: 17,
+      route: "/main/wordcard/13",
+      section: "WordCard",
+      x: 45,
+      y: 15,
+      gameType: "wordcard",
+    },
+    {
+      id: 18,
+      route: "/main/wordcard/14",
+      section: "WordCard",
+      x: 30,
+      y: 5,
+      gameType: "wordcard",
+    },
+    {
+      id: 19,
+      route: "/main/wordcard/15",
+      section: "WordCard",
+      x: 15,
+      y: 15,
+      gameType: "wordcard",
+    },
+    {
+      id: 20,
+      route: "/main/crossword/3",
+      section: "CrossWord",
+      x: 10,
+      y: 30,
+      gameType: "crossword",
+    },
   ];
 
   const sectionSeparators = [
@@ -106,15 +254,19 @@ export default function RoadMap() {
   }, []);
 
   const getLevelStatus = (level: Level) => {
-    const currentIndex = levels.findIndex(l => l.id === level.id);
+    const currentIndex = levels.findIndex((l) => l.id === level.id);
     if (currentIndex === 0) {
-      const currentProgress = lessonProgress.find((l) => l.levelId === level.id);
+      const currentProgress = lessonProgress.find(
+        (l) => l.levelId === level.id
+      );
       return currentProgress?.completed ? "completed" : "current";
     }
 
     const prevLevel = levels[currentIndex - 1];
-    const prevCompleted = lessonProgress.find((l) => l.levelId === prevLevel.id)?.completed;
-    
+    const prevCompleted = lessonProgress.find(
+      (l) => l.levelId === prevLevel.id
+    )?.completed;
+
     if (!prevCompleted) return "locked";
 
     const currentProgress = lessonProgress.find((l) => l.levelId === level.id);
@@ -125,17 +277,15 @@ export default function RoadMap() {
     if (getLevelStatus(level) === "locked") return;
     router.push(level.route);
   };
-  
 
   const getLevelLabel = (level: Level) => {
-    const index = parseInt(level.route.split('/').pop() || '0', 10) + 1;
-    if (level.gameType === 'wordcard') {
+    const index = parseInt(level.route.split("/").pop() || "0", 10) + 1;
+    if (level.gameType === "wordcard") {
       return `W${index}`;
     } else {
       return `C${index}`;
     }
   };
-
 
   return (
     <div className="relative w-full h-screen overflow-hidden">
@@ -179,7 +329,9 @@ export default function RoadMap() {
           const prev = levels[idx];
           const prevStatus = getLevelStatus(prev);
           const currentStatus = getLevelStatus(level);
-          const isCompleted = prevStatus === "completed" && (currentStatus === "completed" || currentStatus === "current");
+          const isCompleted =
+            prevStatus === "completed" &&
+            (currentStatus === "completed" || currentStatus === "current");
 
           return (
             <g key={`line-${level.id}`}>
@@ -303,11 +455,15 @@ export default function RoadMap() {
         <h3 className="font-bold text-lg mb-2">Тоглоомын зааварчилгаа</h3>
         <div className="space-y-2 text-sm">
           <div className="flex items-center gap-2">
-            <span className="bg-cyan-200 text-cyan-800 px-2 py-1 rounded font-bold">W</span>
+            <span className="bg-cyan-200 text-cyan-800 px-2 py-1 rounded font-bold">
+              W
+            </span>
             <span>Үг бүтээх тоглоом</span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="bg-fuchsia-200 text-fuchsia-800 px-2 py-1 rounded font-bold">C</span>
+            <span className="bg-fuchsia-200 text-fuchsia-800 px-2 py-1 rounded font-bold">
+              C
+            </span>
             <span>Үг хайх тоглоом</span>
           </div>
         </div>
