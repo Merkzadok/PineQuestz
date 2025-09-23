@@ -1,9 +1,9 @@
 import { useRef, useState } from "react";
-import { WordData } from "../utils/data";
+import { WordData } from "../../../utils/data";
 import { DragDropWord } from "./DragDropWord";
 import Image from "next/image";
 import { useTextSpeaker } from "@/provider/TextContext";
-import { Volume2 } from "lucide-react";
+import { Target, Volume2 } from "lucide-react";
 import VoiceTranscriber from "./VoiceTranscriber";
 
 interface Props {
@@ -46,9 +46,17 @@ export const WordCard: React.FC<Props> = ({ wordData, onNext }) => {
 
   return (
     <div className="bg-white rounded-2xl shadow-xl p-6 flex flex-col items-center w-full max-w-lg mx-auto">
+   <div className="flex items-center justify-center space-x- p-4 rounded-2xl shadow-lg">
+  <Target className="w-12 h-12 text-gray-600 animate-bounce" />
+  <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-green-500 text-center">
+    Үг бүтээх тоглоом
+  </h1>
+  <Target className="w-12 h-12 text-gray-600 animate-bounce" />
+</div>
+
       {/* Image and text to speech */}
       {wordData.image && (
-        <div className="relative mb-4 group">
+        <div className="relative mb-4 group mt-6">
           <Image
             src={wordData.image}
             alt={wordData.word}

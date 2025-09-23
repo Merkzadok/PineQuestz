@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, forwardRef, useImperativeHandle } from "react";
 import { DndContext, useDraggable, useDroppable, DragEndEvent } from "@dnd-kit/core";
-import { WordData } from "../utils/data";
+import { WordData } from "../../../utils/data";
 
 interface Props {
   wordData: WordData;
