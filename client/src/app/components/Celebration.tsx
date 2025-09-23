@@ -7,7 +7,7 @@ import confetti from "canvas-confetti";
 type CelebrationProps = {
   status: "correct" | "wrong" | null;
   word?: string;
-  onDone?: () => void;
+  onDone?: () => void; // called when celebration is finished
 };
 
 export default function Celebration({
@@ -17,14 +17,13 @@ export default function Celebration({
 }: CelebrationProps) {
   useEffect(() => {
     if (status === "correct") {
-      // fire confetti burst
+      // 🎉 Fire confetti burst
       confetti({
         particleCount: 120,
         spread: 80,
         origin: { y: 0.6 },
       });
 
-      // auto-clear after 2s
       const timer = setTimeout(() => onDone?.(), 2000);
       return () => clearTimeout(timer);
     }
@@ -44,13 +43,15 @@ export default function Celebration({
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0, opacity: 0 }}
           transition={{ duration: 0.4, type: "spring" }}
-          className={`absolute top-10 left-1/2 -translate-x-1/2 text-2xl font-bold px-4 py-2 rounded-2xl shadow-md ${
+          className={`fixed top-20 left-1/2 -translate-x-1/2 text-2xl font-bold px-6 py-3 rounded-2xl shadow-lg z-50 ${
             status === "correct"
               ? "bg-green-100 text-green-700"
               : "bg-red-100 text-red-700"
           }`}
         >
-          {status === "correct" ? `🎉 Зөв байна! 🟢` : "😅 Буруу байна"}
+          {status === "correct"
+            ? `🌟 Гайхалтай!  `
+            : "💪 Дахин оролдоод үзээрэй!"}
         </motion.div>
       )}
     </AnimatePresence>
