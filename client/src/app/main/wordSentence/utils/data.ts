@@ -38,23 +38,23 @@ function generateAllWords(letters: string[]): string[] {
 }
 
 
-export const words: WordData[] = [
-  { id: "1", word: "сүх", letters: shuffleArray(["с", "ү", "х"]), image: "/images/axe.avif", possibleWords: generateAllWords(["с", "ү", "х"]) },
-  { id: "2", word: "ном", letters: shuffleArray(["н", "о", "м"]), image: "/images/book.jpeg", possibleWords: generateAllWords(["н", "о", "м"]) },
-  { id: "3", word: "сар", letters: shuffleArray(["с", "а", "р"]), image: "/images/moon.jpg", possibleWords: generateAllWords(["с", "а", "р"]) },
-  { id: "4", word: "шоо", letters: shuffleArray(["ш", "о", "о"]), image: "/images/cube.jpeg", possibleWords: generateAllWords(["ш", "о", "о"]) },
-  { id: "5", word: "хавар", letters: shuffleArray(["х", "а", "в", "а", "р"]), image: "/images/spring.webp", possibleWords: generateAllWords(["х", "а", "в", "а", "р"]) },
-  { id: "6", word: "хүүхэд", letters: shuffleArray(["х", "ү", "ү", "х", "э", "д"]), image: "/images/child.webp", possibleWords: generateAllWords(["х", "ү", "ү", "х", "э", "д"]) },
-  { id: "7", word: "хөлөг", letters: shuffleArray(["х", "ө", "л", "ө", "г"]), image: "/images/ship.jpeg", possibleWords: generateAllWords(["х", "ө", "л", "ө", "г"]) },
-  { id: "8", word: "цэцэг", letters: shuffleArray(["ц", "э", "ц", "э", "г"]), image: "/images/flower.jpg", possibleWords: generateAllWords(["ц", "э", "ц", "э", "г"]) },
-  { id: "9", word: "цоож", letters: shuffleArray(["ц", "о", "о", "ж"]), image: "/images/lock.png", possibleWords: generateAllWords(["ц", "о", "о", "ж"]) },
-  { id: "10", word: "үзэг", letters: shuffleArray(["ү", "з", "э", "г"]), image: "/images/pen.jpg", possibleWords: generateAllWords(["ү", "з", "э", "г"]) },
-  { id: "11", word: "зоос", letters: shuffleArray(["з", "о", "о", "с"]), image: "/images/coin.jpg", possibleWords: generateAllWords(["з", "о", "о", "с"]) },
-  { id: "12", word: "дээл", letters: shuffleArray(["д", "э", "э", "л"]), image: "/images/deel.webp", possibleWords: generateAllWords(["д", "э", "э", "л"]) },
-  { id: "13", word: "зүү", letters: shuffleArray(["з", "ү", "ү"]), image: "/images/needle.png", possibleWords: generateAllWords(["з", "ү", "ү"]) },
-  { id: "14", word: "жудо", letters: shuffleArray(["ж", "у", "д", "о"]), image: "/images/judo.avif", possibleWords: generateAllWords(["ж", "у", "д", "о"]) },
-  { id: "15", word: "төгрөг", letters: shuffleArray(["т", "ө", "г", "р", "ө", "г"]), image: "/images/tugrug.png", possibleWords: generateAllWords(["т", "ө", "г", "р", "ө", "г"]) },
-];
+// export const words: WordData[] = [
+//   { id: "1", word: "сүх", letters: shuffleArray(["с", "ү", "х"]), image: "/images/axe.avif", possibleWords: generateAllWords(["с", "ү", "х"]) },
+//   { id: "2", word: "ном", letters: shuffleArray(["н", "о", "м"]), image: "/images/book.jpeg", possibleWords: generateAllWords(["н", "о", "м"]) },
+//   { id: "3", word: "сар", letters: shuffleArray(["с", "а", "р"]), image: "/images/moon.jpg", possibleWords: generateAllWords(["с", "а", "р"]) },
+//   { id: "4", word: "шоо", letters: shuffleArray(["ш", "о", "о"]), image: "/images/cube.jpeg", possibleWords: generateAllWords(["ш", "о", "о"]) },
+//   { id: "5", word: "хавар", letters: shuffleArray(["х", "а", "в", "а", "р"]), image: "/images/spring.webp", possibleWords: generateAllWords(["х", "а", "в", "а", "р"]) },
+//   { id: "6", word: "хүүхэд", letters: shuffleArray(["х", "ү", "ү", "х", "э", "д"]), image: "/images/child.webp", possibleWords: generateAllWords(["х", "ү", "ү", "х", "э", "д"]) },
+//   { id: "7", word: "хөлөг", letters: shuffleArray(["х", "ө", "л", "ө", "г"]), image: "/images/ship.jpeg", possibleWords: generateAllWords(["х", "ө", "л", "ө", "г"]) },
+//   { id: "8", word: "цэцэг", letters: shuffleArray(["ц", "э", "ц", "э", "г"]), image: "/images/flower.jpg", possibleWords: generateAllWords(["ц", "э", "ц", "э", "г"]) },
+//   { id: "9", word: "цоож", letters: shuffleArray(["ц", "о", "о", "ж"]), image: "/images/lock.png", possibleWords: generateAllWords(["ц", "о", "о", "ж"]) },
+//   { id: "10", word: "үзэг", letters: shuffleArray(["ү", "з", "э", "г"]), image: "/images/pen.jpg", possibleWords: generateAllWords(["ү", "з", "э", "г"]) },
+//   { id: "11", word: "зоос", letters: shuffleArray(["з", "о", "о", "с"]), image: "/images/coin.jpg", possibleWords: generateAllWords(["з", "о", "о", "с"]) },
+//   { id: "12", word: "дээл", letters: shuffleArray(["д", "э", "э", "л"]), image: "/images/deel.webp", possibleWords: generateAllWords(["д", "э", "э", "л"]) },
+//   { id: "13", word: "зүү", letters: shuffleArray(["з", "ү", "ү"]), image: "/images/needle.png", possibleWords: generateAllWords(["з", "ү", "ү"]) },
+//   { id: "14", word: "жудо", letters: shuffleArray(["ж", "у", "д", "о"]), image: "/images/judo.avif", possibleWords: generateAllWords(["ж", "у", "д", "о"]) },
+//   { id: "15", word: "төгрөг", letters: shuffleArray(["т", "ө", "г", "р", "ө", "г"]), image: "/images/tugrug.png", possibleWords: generateAllWords(["т", "ө", "г", "р", "ө", "г"]) },
+// ];
 
 // export const wordsColor:WordData[] = [
 //   {id: "1", word: 'хөх', letters: shuffleArray(['х', 'ө', 'х']), image: '/images/blue.png', possibleWords: generateAllWords(['х', 'ө', 'х'])},
@@ -70,18 +70,18 @@ export const words: WordData[] = [
 // ]
 
 
-// export const wordsAnimal:WordData[] = [
-//   { id: "1", word: 'нохой', letters: shuffleArray(['н', 'о', 'х', 'о', 'й']), image: '/images/dog.png', possibleWords: generateAllWords(['н', 'о', 'х', 'о', 'й'])},
-//   { id: "2", word: 'муур', letters: shuffleArray(['м', 'у', 'у', 'р']), image: '/images/cat.png', possibleWords: generateAllWords(['м', 'у', 'у', 'р'])},
-//   { id: "3", word: 'тахиа', letters: shuffleArray(['т', 'а', 'х', 'и', 'а']), image: '/images/chicken.png', possibleWords: generateAllWords(['т', 'а', 'х', 'и', 'а'])},
-//   { id: "4", word: "морь", letters: shuffleArray(["м", "о", "р", "ь"]), image: "/images/horse.jpg", possibleWords: generateAllWords(["м", "о", "р", "ь"]) },
-//   { id: "5", word: "үхэр", letters: shuffleArray(["ү", "х", "э", "р"]), image: "/images/cow.webp", possibleWords: generateAllWords(["ү", "х", "э", "р"]) },
-//   { id: "6", word: "загас", letters: shuffleArray(["з", "а", "г", "а", "с"]), image: "/images/fish.png", possibleWords: generateAllWords(["з", "а", "г", "а", "с"]) },
-//   { id: "7", word: 'хонь', letters: shuffleArray(['х', 'о', 'н', 'ь']), image: '/images/sheep.png', possibleWords: generateAllWords(['х', 'о', 'н', 'ь'])},
-//   { id: "8", word: 'тэмээ', letters: shuffleArray(['т', 'э', 'м', 'э', 'э']), image: '/images/camel.png', possibleWords: generateAllWords(['т', 'э', 'м', 'э', 'э'])},
-//   { id: "9", word: 'баавгай', letters: shuffleArray(['б', 'а', 'а', 'в', 'г', 'а', 'й']), image: '/images/bear.png', possibleWords: generateAllWords(['б', 'а', 'а', 'в', 'г', 'а', 'й'])},
-//   { id: "10", word: 'чоно', letters: shuffleArray(['ч', 'о', 'н', 'о']), image: '/images/wolf.png', possibleWords: generateAllWords(['ч', 'о', 'н', 'о'])}
-// ]
+export const words:WordData[] = [
+  { id: "1", word: 'нохой', letters: shuffleArray(['н', 'о', 'х', 'о', 'й']), image: '/images/dog.png', possibleWords: generateAllWords(['н', 'о', 'х', 'о', 'й'])},
+  { id: "2", word: 'муур', letters: shuffleArray(['м', 'у', 'у', 'р']), image: '/images/cat.png', possibleWords: generateAllWords(['м', 'у', 'у', 'р'])},
+  { id: "3", word: 'тахиа', letters: shuffleArray(['т', 'а', 'х', 'и', 'а']), image: '/images/chicken.png', possibleWords: generateAllWords(['т', 'а', 'х', 'и', 'а'])},
+  { id: "4", word: "морь", letters: shuffleArray(["м", "о", "р", "ь"]), image: "/images/horse.png", possibleWords: generateAllWords(["м", "о", "р", "ь"]) },
+  { id: "5", word: "үхэр", letters: shuffleArray(["ү", "х", "э", "р"]), image: "/images/cow.png", possibleWords: generateAllWords(["ү", "х", "э", "р"]) },
+  { id: "6", word: "загас", letters: shuffleArray(["з", "а", "г", "а", "с"]), image: "/images/fish.png", possibleWords: generateAllWords(["з", "а", "г", "а", "с"]) },
+  { id: "7", word: 'хонь', letters: shuffleArray(['х', 'о', 'н', 'ь']), image: '/images/sheep.png', possibleWords: generateAllWords(['х', 'о', 'н', 'ь'])},
+  { id: "8", word: 'тэмээ', letters: shuffleArray(['т', 'э', 'м', 'э', 'э']), image: '/images/camel.png', possibleWords: generateAllWords(['т', 'э', 'м', 'э', 'э'])},
+  { id: "9", word: 'баавгай', letters: shuffleArray(['б', 'а', 'а', 'в', 'г', 'а', 'й']), image: '/images/bear.png', possibleWords: generateAllWords(['б', 'а', 'а', 'в', 'г', 'а', 'й'])},
+  { id: "10", word: 'чоно', letters: shuffleArray(['ч', 'о', 'н', 'о']), image: '/images/wolf.png', possibleWords: generateAllWords(['ч', 'о', 'н', 'о'])}
+]
 
 // export const wordsFruits:WordData[] = [
 //   { id: "1", word: 'алим', letters: shuffleArray(['а', 'л', 'и', 'м']), image: '/images/apple.png', possibleWords: generateAllWords(['а', 'л', 'и', 'м'])},

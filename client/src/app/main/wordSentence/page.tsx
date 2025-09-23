@@ -1,9 +1,9 @@
 "use client";
 import { useState, useEffect } from "react";
 import { words as allWords, WordData } from "./utils/data";
-import { WordCard } from "./components/WordCard";
 import { ProgressBar } from "./components/ProgressBar";
 import { StreakDisplay } from "./components/StreakDisplay";
+import { WordCard } from "./components/WordCard";
 
 export default function Home() {
   const [words, setWords] = useState<WordData[]>([]);
