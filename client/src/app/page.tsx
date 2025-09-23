@@ -46,8 +46,6 @@ const SectionSeparator = ({
   x: number;
   y: number;
 }) => {
-
-
   return (
     <div
       className="absolute flex flex-col items-center z-10"
@@ -58,8 +56,7 @@ const SectionSeparator = ({
       }}
     >
       <div className="relative">
-        <div className="w-28 h-28 rounded-full bg-white shadow-xl border-4 border-yellow-400 flex items-center justify-center mb-3">
-        </div>
+        <div className="w-28 h-28 rounded-full bg-white shadow-xl border-4 border-yellow-400 flex items-center justify-center mb-3"></div>
         <div className="absolute -top-2 -right-2">
           <Sparkles className="w-8 h-8 text-yellow-500" />
         </div>
