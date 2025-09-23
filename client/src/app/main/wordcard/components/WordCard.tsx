@@ -18,10 +18,11 @@ export const WordCard: React.FC<Props> = ({ wordData, onNext }) => {
   const [slots, setSlots] = useState<(string | null)[]>([]);
   const [showPopup, setShowPopup] = useState<string | null>(null);
 
-    const handleCorrectSpeech = () => {
-    alert("🎉 Баяр хүргэе! Чи зөв хэллээ.");
-    onNext(false); 
-  };
+const handleCorrectSpeech = () => {
+  alert("🎉 Баяр хүргэе! Чи зөв хэллээ.");
+  setTimeout(() => onNext(true), 300); 
+};
+
 
   const handleCheckOrNext = () => {
     if (isCorrect === null) {

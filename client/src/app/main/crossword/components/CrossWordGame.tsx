@@ -25,7 +25,7 @@ type Cell = {
 
 interface CrossWordProps {
   levelIndex: number;
-  wordsForLevel:WordData[];
+  wordsForLevel?: number[]; 
   onNext: () => void;
 }
 

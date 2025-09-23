@@ -38,16 +38,7 @@ const SectionSeparator = ({
   x: number;
   y: number;
 }) => {
-  const getSectionImage = (section: string) => {
-    switch (section) {
-      case "WordCard":
-        return "/alphabet-blocks-colorful-letters-abc.jpg";
-      case "CrossWord":
-        return "/rainbow-color-palette-paint-brush.jpg";
-      default:
-        return "/learning-education.jpg";
-    }
-  };
+
 
   return (
     <div
@@ -60,11 +51,6 @@ const SectionSeparator = ({
     >
       <div className="relative">
         <div className="w-28 h-28 rounded-full bg-white shadow-xl border-4 border-yellow-400 flex items-center justify-center mb-3">
-          <img
-            src={getSectionImage(section) || "/placeholder.svg"}
-            alt={`${section} section`}
-            className="w-20 h-20 rounded-full"
-          />
         </div>
         <div className="absolute -top-2 -right-2">
           <Sparkles className="w-8 h-8 text-yellow-500" />
