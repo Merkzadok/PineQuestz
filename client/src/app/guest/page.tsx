@@ -12,7 +12,7 @@ function GuestUser() {
         return;
       }
 
-      const response = await fetch(`http://localhost:4001/guest`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_KEY}/guest`, {
         method: "POST",
       });
       const data = await response.json();

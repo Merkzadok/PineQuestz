@@ -15,7 +15,7 @@ export const TextSpeakerProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const speakText = async (text: string) => {
     try {
-      const res = await fetch("http://localhost:4001/audio/tts", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_KEY}/audio/tts`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ text }),
