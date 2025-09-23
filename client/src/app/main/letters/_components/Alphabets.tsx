@@ -1,6 +1,7 @@
 "use client";
 
 import { useTextSpeaker } from "@/provider/TextContext";
+import { MoveUp } from "lucide-react";
 import { useState } from "react";
 
 type Letter = {
@@ -309,51 +310,19 @@ export default function MongolianAlphabet() {
           {!selectedConsonant && (
             <div className="text-center py-16">
               <div
-                className="w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-gray-200 to-gray-300 
-                            rounded-full flex items-center justify-center"
+                className="w-24 h-24 mx-auto mb-6 
+               bg-gradient-to-br from-blue-200 to-purple-300
+               rounded-full flex items-center justify-center 
+               shadow-md"
               >
-                <svg
-                  className="w-12 h-12 text-gray-500"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M7 4V2a1 1 0 011-1h4a1 1 0 011 1v2h4a1 1 0 011 1v2a1 1 0 01-1 1h-1v12a2 2 0 01-2 2H6a2 2 0 01-2-2V8H3a1 1 0 01-1-1V5a1 1 0 011-1h4z"
-                  />
-                </svg>
+                <MoveUp className="h-14 w-10 text-white" />
               </div>
-              <p className="text-gray-500 text-lg">
+
+              <p className="text-gray-700 text-lg font-medium">
                 Эхлэхийн тулд дээрээс гийгүүлэгч сонгоно уу
               </p>
             </div>
           )}
-        </div>
-
-        {/* Footer info */}
-        <div className="text-center mt-16">
-          <div
-            className="inline-flex items-center px-6 py-3 bg-white/50 backdrop-blur-sm 
-                        border border-gray-200 rounded-full shadow-sm"
-          >
-            <svg
-              className="w-5 h-5 text-blue-600 mr-2"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
-              <path
-                fillRule="evenodd"
-                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-                clipRule="evenodd"
-              />
-            </svg>
-            <span className="text-sm text-gray-600">
-              Товч дээр дарж үсэг болон үгийн дуудлагыг сонсоно уу
-            </span>
-          </div>
         </div>
       </div>
     </div>
