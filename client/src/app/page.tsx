@@ -55,7 +55,7 @@ const SectionSeparator = ({
         transform: "translate(-50%, -50%)",
       }}
     >
-      <div className="relative">
+      {/* <div className="relative">
         <div className="w-28 h-28 rounded-full bg-white shadow-xl border-4 border-yellow-400 flex items-center justify-center mb-3"></div>
         <div className="absolute -top-2 -right-2">
           <Sparkles className="w-8 h-8 text-yellow-500" />
@@ -65,7 +65,7 @@ const SectionSeparator = ({
         <span className="text-lg font-bold text-gray-800">
           {section === "WordCard" ? "Үг бүтээх" : "Үг хайх"}
         </span>
-      </div>
+      </div> */}
     </div>
   );
 };
@@ -289,7 +289,7 @@ export default function RoadMap() {
       <div
         className="absolute inset-0 bg-cover bg-center"
         style={{
-          backgroundImage: "url('/images/aaaaa.jpg')",
+          backgroundImage: "url('/images/bg.avif')",
           backgroundPosition: "center 20%",
         }}
       />
