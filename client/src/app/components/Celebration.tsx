@@ -50,7 +50,7 @@ export default function Celebration({
               : "bg-red-100 text-red-700"
           }`}
         >
-          {status === "correct" ? `🎉 Зөв байна! ${word} 🟢` : "😅 Буруу байна"}
+          {status === "correct" ? `🎉 Зөв байна! 🟢` : "😅 Буруу байна"}
         </motion.div>
       )}
     </AnimatePresence>
