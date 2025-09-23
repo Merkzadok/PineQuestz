@@ -1,5 +1,13 @@
 import Link from "next/link";
-import { User, LogOut, Map, BookOpen, Home, Trophy } from "lucide-react";
+import {
+  User,
+  LogOut,
+  Map,
+  BookOpen,
+  Home,
+  Trophy,
+  PandaIcon,
+} from "lucide-react";
 
 export default function Sidebar() {
   const menuItems = [
@@ -32,7 +40,7 @@ export default function Sidebar() {
       <div className="p-6 border-b border-slate-200">
         <div className="flex items-center space-x-3">
           <div className="w-12 h-12 bg-blue-100 rounded-2xl flex items-center justify-center shadow-sm">
-            <Home className="w-6 h-6 text-blue-600" />
+            <PandaIcon className="w-6 h-6 text-blue-600" />
           </div>
           <div>
             <h2 className="text-lg font-semibold text-slate-800">Хэрэглэгч</h2>
