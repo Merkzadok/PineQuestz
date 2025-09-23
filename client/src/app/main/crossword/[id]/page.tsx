@@ -1,29 +1,30 @@
 "use client";
-import { useParams } from "next/navigation";
-import CrossWordLevel1 from "../components/Level1";
-import CrossWordLevel2 from "../components/Level2";
-import { JSX } from "react";
-import CrossWordLevelA from "../components/LevelA";
 
-const CrossWordPage = () => {
+import { useParams, useRouter } from "next/navigation";
+import CrossWordGame from "../components/CrossWordGame";
+import { levels } from "@/app/utils/data";
+
+export default function CrossWordPage() {
   const params = useParams();
-  const lessonId = Number(params.id);
+  const router = useRouter();
+  const levelIndex = Number(params.id);
 
-  const lessonMap: Record<number, JSX.Element> = {
-    1: <CrossWordLevel1 />,
-    2: <CrossWordLevel2 />,
-    3: <CrossWordLevelA />,
-
-    // add more lessons here
+  const handleNext = () => {
+    localStorage.setItem(`level${levelIndex + 1}`, "completed");
+    router.push(`/main/crossword/${levelIndex + 1}`);
   };
 
+  if (!levels[levelIndex]) {
+    return <div className="p-6 text-red-500">❌ Энэ crossword level олдсонгүй</div>;
+  }
+
   return (
-    <div>
-      <div className="min-h-screen bg-gray-50 flex flex-col items-center p-4">
-        {lessonMap[lessonId] || <p>Lesson not found</p>}
-      </div>
+    <div className="p-6">
+      <CrossWordGame
+        levelIndex={levelIndex}
+        wordsForLevel={levels[levelIndex]}
+        onNext={handleNext}
+      />
     </div>
   );
-};
-
-export default CrossWordPage;
+}

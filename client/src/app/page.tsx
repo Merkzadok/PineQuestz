@@ -8,8 +8,9 @@ interface Level {
   id: number;
   route: string;
   section: string;
-  x: number; // % position across width
-  y: number; // % position across height
+  x: number; 
+  y: number;
+  gameType: 'wordcard' | 'crossword';
 }
 
 interface LessonProgress {
@@ -19,21 +20,13 @@ interface LessonProgress {
 
 const sectionColors: Record<
   string,
-  { bg: string; dark: string; accent: string }
+  { bg: string; dark: string; accent:string }
 > = {
-  Letters: { bg: "bg-cyan-200", dark: "bg-cyan-600", accent: "bg-cyan-300" },
-  Colors: {
-    bg: "bg-fuchsia-200",
-    dark: "bg-fuchsia-600",
-    accent: "bg-fuchsia-300",
-  },
-  Animals: {
-    bg: "bg-orange-200",
-    dark: "bg-orange-600",
-    accent: "bg-orange-300",
-  },
-  Food: { bg: "bg-lime-200", dark: "bg-lime-600", accent: "bg-lime-300" },
-  Misc: { bg: "bg-rose-200", dark: "bg-rose-600", accent: "bg-rose-300" },
+  WordCard: { bg: "bg-cyan-200", dark: "bg-cyan-600", accent: "bg-cyan-300" },
+  CrossWord: { bg: "bg-fuchsia-200", dark: "bg-fuchsia-600", accent: "bg-fuchsia-300" },
+  Colors: { bg: "bg-orange-200", dark: "bg-orange-600", accent: "bg-orange-300" },
+  Animals: { bg: "bg-lime-200", dark: "bg-lime-600", accent: "bg-lime-300" },
+  Food: { bg: "bg-rose-200", dark: "bg-rose-600", accent: "bg-rose-300" },
 };
 
 const SectionSeparator = ({
@@ -47,16 +40,10 @@ const SectionSeparator = ({
 }) => {
   const getSectionImage = (section: string) => {
     switch (section) {
-      case "Letters":
+      case "WordCard":
         return "/alphabet-blocks-colorful-letters-abc.jpg";
-      case "Colors":
+      case "CrossWord":
         return "/rainbow-color-palette-paint-brush.jpg";
-      case "Animals":
-        return "/cute-cartoon-animals-lion-elephant.jpg";
-      case "Food":
-        return "/fresh-fruits-vegetables-apple-banana.jpg";
-      case "Misc":
-        return "/educational-icons-books-stars-learning.jpg";
       default:
         return "/learning-education.jpg";
     }
@@ -84,7 +71,9 @@ const SectionSeparator = ({
         </div>
       </div>
       <div className="bg-gradient-to-r from-yellow-300 to-orange-300 px-4 py-2 rounded-full shadow-lg border-2 border-white">
-        <span className="text-lg font-bold text-gray-800">{section}</span>
+        <span className="text-lg font-bold text-gray-800">
+          {section === "WordCard" ? "Үг бүтээх" : "Үг хайх"}
+        </span>
       </div>
     </div>
   );
@@ -95,37 +84,31 @@ export default function RoadMap() {
   const [lessonProgress, setLessonProgress] = useState<LessonProgress[]>([]);
 
   const levels: Level[] = [
-    { id: 1, route: "/main/crossword/1", section: "Letters", x: 5, y: 5 },
-    { id: 2, route: "/main/crossword/2", section: "Letters", x: 20, y: 15 },
-    { id: 3, route: "/main/wordSentence", section: "Letters", x: 35, y: 5 },
-    { id: 4, route: "/main/wordSentence", section: "Letters", x: 50, y: 15 },
-    { id: 5, route: "/main/wordSentence", section: "Letters", x: 65, y: 5 },
-
-    { id: 6, route: "/main/wordSentence", section: "Colors", x: 75, y: 20 },
-    { id: 7, route: "/main/wordSentence", section: "Colors", x: 60, y: 30 },
-    { id: 8, route: "/main/wordSentence", section: "Colors", x: 45, y: 20 },
-    { id: 9, route: "/main/wordSentence", section: "Colors", x: 30, y: 30 },
-    { id: 10, route: "/main/wordSentence", section: "Colors", x: 15, y: 20 },
-
-    { id: 11, route: "/main/wordSentence", section: "Animals", x: 25, y: 40 },
-    { id: 12, route: "/main/wordSentence", section: "Animals", x: 40, y: 50 },
-    { id: 13, route: "/main/wordSentence", section: "Animals", x: 55, y: 40 },
-    { id: 14, route: "/main/wordSentence", section: "Animals", x: 70, y: 50 },
-    { id: 15, route: "/main/wordSentence", section: "Animals", x: 85, y: 40 },
-
-    { id: 16, route: "/main/wordSentence", section: "Food", x: 75, y: 60 },
-    { id: 17, route: "/main/wordSentence", section: "Food", x: 60, y: 70 },
-    { id: 18, route: "/main/wordSentence", section: "Food", x: 45, y: 60 },
-    { id: 19, route: "/main/wordSentence", section: "Food", x: 30, y: 70 },
-    { id: 20, route: "/main/wordSentence", section: "Food", x: 15, y: 60 },
+    { id: 1, route: "/main/wordcard/0", section: "WordCard", x: 10, y: 85, gameType: 'wordcard' },
+    { id: 2, route: "/main/wordcard/1", section: "WordCard", x: 25, y: 75, gameType: 'wordcard' },
+    { id: 3, route: "/main/wordcard/2", section: "WordCard", x: 40, y: 85, gameType: 'wordcard' },
+    { id: 4, route: "/main/wordcard/3", section: "WordCard", x: 55, y: 75, gameType: 'wordcard' },
+    { id: 5, route: "/main/crossword/0", section: "CrossWord", x: 70, y: 85, gameType: 'crossword' },
+    { id: 6, route: "/main/wordcard/4", section: "WordCard", x: 85, y: 70, gameType: 'wordcard' },
+    { id: 7, route: "/main/wordcard/5", section: "WordCard", x: 70, y: 55, gameType: 'wordcard' },
+    { id: 8, route: "/main/wordcard/6", section: "WordCard", x: 55, y: 70, gameType: 'wordcard' },
+    { id: 9, route: "/main/wordcard/7", section: "WordCard", x: 40, y: 55, gameType: 'wordcard' },
+    { id: 10, route: "/main/crossword/1", section: "CrossWord", x: 25, y: 45, gameType: 'crossword' },
+    { id: 11, route: "/main/wordcard/8", section: "WordCard", x: 40, y: 35, gameType: 'wordcard' },
+    { id: 12, route: "/main/wordcard/9", section: "WordCard", x: 55, y: 25, gameType: 'wordcard' },
+    { id: 13, route: "/main/wordcard/10", section: "WordCard", x: 70, y: 35, gameType: 'wordcard' },
+    { id: 14, route: "/main/wordcard/11", section: "WordCard", x: 85, y: 25, gameType: 'wordcard' },
+    { id: 15, route: "/main/crossword/2", section: "CrossWord", x: 75, y: 15, gameType: 'crossword' },
+    { id: 16, route: "/main/wordcard/12", section: "WordCard", x: 60, y: 5, gameType: 'wordcard' },
+    { id: 17, route: "/main/wordcard/13", section: "WordCard", x: 45, y: 15, gameType: 'wordcard' },
+    { id: 18, route: "/main/wordcard/14", section: "WordCard", x: 30, y: 5, gameType: 'wordcard' },
+    { id: 19, route: "/main/wordcard/15", section: "WordCard", x: 15, y: 15, gameType: 'wordcard' },
+    { id: 20, route: "/main/crossword/3", section: "CrossWord", x: 10, y: 30, gameType: 'crossword' }
   ];
 
   const sectionSeparators = [
-    { section: "Letters", x: 15, y: 8 },
-    { section: "Colors", x: 85, y: 25 },
-    { section: "Animals", x: 10, y: 45 },
-    { section: "Food", x: 90, y: 65 },
-    { section: "Misc", x: 50, y: 85 },
+    { section: "WordCard", x: 15, y: 70 },
+    { section: "CrossWord", x: 78, y: 80 },
   ];
 
   useEffect(() => {
@@ -137,21 +120,36 @@ export default function RoadMap() {
   }, []);
 
   const getLevelStatus = (level: Level) => {
-    const prevLevel = levels[level.id - 2];
-    const prevCompleted = prevLevel
-      ? lessonProgress.find((l) => l.levelId === prevLevel.id)?.completed
-      : true;
-    const currentProgress = lessonProgress.find((l) => l.levelId === level.id);
+    const currentIndex = levels.findIndex(l => l.id === level.id);
+    if (currentIndex === 0) {
+      const currentProgress = lessonProgress.find((l) => l.levelId === level.id);
+      return currentProgress?.completed ? "completed" : "current";
+    }
 
+    const prevLevel = levels[currentIndex - 1];
+    const prevCompleted = lessonProgress.find((l) => l.levelId === prevLevel.id)?.completed;
+    
     if (!prevCompleted) return "locked";
-    if (currentProgress?.completed) return "completed";
-    return "current";
+
+    const currentProgress = lessonProgress.find((l) => l.levelId === level.id);
+    return currentProgress?.completed ? "completed" : "current";
   };
 
   const handleLevelClick = (level: Level) => {
     if (getLevelStatus(level) === "locked") return;
     router.push(level.route);
   };
+  
+
+  const getLevelLabel = (level: Level) => {
+    const index = parseInt(level.route.split('/').pop() || '0', 10) + 1;
+    if (level.gameType === 'wordcard') {
+      return `W${index}`;
+    } else {
+      return `C${index}`;
+    }
+  };
+
 
   return (
     <div className="relative w-full h-screen overflow-hidden">
@@ -194,12 +192,11 @@ export default function RoadMap() {
         {levels.slice(1).map((level, idx) => {
           const prev = levels[idx];
           const prevStatus = getLevelStatus(prev);
-          const status = getLevelStatus(level);
-          const isCompleted =
-            prevStatus === "completed" && status === "completed";
+          const currentStatus = getLevelStatus(level);
+          const isCompleted = prevStatus === "completed" && (currentStatus === "completed" || currentStatus === "current");
 
           return (
-            <g key={level.id}>
+            <g key={`line-${level.id}`}>
               <line
                 x1={`${prev.x}%`}
                 y1={`${prev.y}%`}
@@ -309,11 +306,26 @@ export default function RoadMap() {
                   : "bg-gray-200 text-gray-600"
               }`}
             >
-              {level.id}
+              {getLevelLabel(level)}
             </span>
           </div>
         );
       })}
+
+      {/* Info Panel */}
+      <div className="absolute top-4 right-4 bg-white/90 rounded-lg p-4 shadow-lg max-w-xs">
+        <h3 className="font-bold text-lg mb-2">Тоглоомын зааварчилгаа</h3>
+        <div className="space-y-2 text-sm">
+          <div className="flex items-center gap-2">
+            <span className="bg-cyan-200 text-cyan-800 px-2 py-1 rounded font-bold">W</span>
+            <span>Үг бүтээх тоглоом</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="bg-fuchsia-200 text-fuchsia-800 px-2 py-1 rounded font-bold">C</span>
+            <span>Үг хайх тоглоом</span>
+          </div>
+        </div>
+      </div>
 
       <div className="absolute top-10 left-10 w-10 h-10 bg-yellow-300 rounded-full opacity-70 animate-bounce"></div>
       <div className="absolute top-20 right-20 w-8 h-8 bg-pink-300 rounded-full opacity-70 animate-pulse"></div>

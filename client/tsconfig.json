@@ -29,6 +29,6 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "src/app/main/crossword/components"
-  ],
+, "src/app/main/crossword/(id)"  ],
   "exclude": ["node_modules"]
 }
