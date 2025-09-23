@@ -20,7 +20,7 @@ export const WordCard: React.FC<Props> = ({ wordData, onNext }) => {
 
     const handleCorrectSpeech = () => {
     alert("🎉 Баяр хүргэе! Чи зөв хэллээ.");
-    onNext(true); // streak нэмэх г.м.
+    onNext(false); 
   };
 
   const handleCheckOrNext = () => {
@@ -46,13 +46,14 @@ export const WordCard: React.FC<Props> = ({ wordData, onNext }) => {
 
   return (
     <div className="bg-white rounded-2xl shadow-xl p-6 flex flex-col items-center w-full max-w-lg mx-auto">
+      {/* Image and text to speech */}
       {wordData.image && (
         <div className="relative mb-4 group">
           <Image
             src={wordData.image}
             alt={wordData.word}
-            width={200}
-            height={200}
+            width={300}
+            height={300}
             className="object-contain rounded-lg shadow-md cursor-pointer"
           />
           <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 flex items-center justify-center rounded-lg transition-opacity">
@@ -60,7 +61,7 @@ export const WordCard: React.FC<Props> = ({ wordData, onNext }) => {
           </div>
         </div>
       )}
-
+    {/* Display letters drag and drop */}
       <DragDropWord
         ref={dragDropRef}
         word={wordData.word}
@@ -68,13 +69,13 @@ export const WordCard: React.FC<Props> = ({ wordData, onNext }) => {
         onSlotsChange={setSlots}
       />
 
+     {/* Pool text to speech */}
       <Volume2
         onClick={handleSpeakSlots}
         className="w-10 h-10 text-green-600 cursor-pointer hover:text-green-800 transition"
       />
 
    <div className="w-full flex flex-col item-center">
-
        {/* 🎤 Speech-to-Text */}
         <div className="flex flex-col items-center mt-4">   
           <VoiceTranscriber
@@ -82,7 +83,8 @@ export const WordCard: React.FC<Props> = ({ wordData, onNext }) => {
         onCorrect={handleCorrectSpeech}
       />
         </div>
-        
+
+        {/* Check/Next button */}  
     <div className="flex flex-col items-center mt-4 ">
         <button
           onClick={handleCheckOrNext}
@@ -95,11 +97,10 @@ export const WordCard: React.FC<Props> = ({ wordData, onNext }) => {
           }`}
         >
           {isCorrect === null ? "Шалгах" : isCorrect ? "Дараах" : "Дахин эхлэх"}
-        </button>
+        </button> 
+     </div>
 
-     
-</div>
-
+      {/* Pop up message */}
         {showPopup && (
           <div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none">
             <div className="bg-white px-6 py-4 rounded-2xl shadow-2xl text-xl font-bold text-center transform transition-all duration-500 ease-out scale-110 -translate-y-4 opacity-100">
