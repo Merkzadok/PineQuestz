@@ -1,3 +1,5 @@
+"use client";
+
 import { useRef, useState } from "react";
 import { WordData } from "../../../utils/data";
 import { DragDropWord } from "./DragDropWord";
@@ -5,6 +7,7 @@ import Image from "next/image";
 import { useTextSpeaker } from "@/provider/TextContext";
 import { Target, Volume2 } from "lucide-react";
 import VoiceTranscriber from "./VoiceTranscriber";
+import Celebration from "@/app/components/Celebration";
 
 interface Props {
   wordData: WordData;
@@ -16,10 +19,13 @@ export const WordCard: React.FC<Props> = ({ wordData, onNext }) => {
   const { speakText } = useTextSpeaker();
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const [slots, setSlots] = useState<(string | null)[]>([]);
-  const [showPopup, setShowPopup] = useState<string | null>(null);
+  const [celebrationStatus, setCelebrationStatus] = useState<
+    "correct" | "wrong" | null
+  >(null);
 
+  // Called when speech-to-text matches the word
   const handleCorrectSpeech = () => {
-    alert("🎉 Баяр хүргэе! Чи зөв хэллээ.");
+    setCelebrationStatus("correct");
     setTimeout(() => onNext(true), 300);
   };
 
@@ -27,10 +33,7 @@ export const WordCard: React.FC<Props> = ({ wordData, onNext }) => {
     if (isCorrect === null) {
       const correct = slots.join("") === wordData.word;
       setIsCorrect(correct);
-      setShowPopup(
-        correct ? `🎉 Зөв байна! ${wordData.word} 🟢` : `😅 Буруу байна`
-      );
-      setTimeout(() => setShowPopup(null), 2000);
+      setCelebrationStatus(correct ? "correct" : "wrong");
     } else if (isCorrect) {
       onNext(true);
       setIsCorrect(null);
@@ -48,15 +51,14 @@ export const WordCard: React.FC<Props> = ({ wordData, onNext }) => {
 
   return (
     <div className="bg-white rounded-2xl shadow-xl p-6 flex flex-col items-center w-full max-w-lg mx-auto">
-      <div className="flex items-center justify-center space-x- p-4 rounded-2xl shadow-lg">
-        <Target className="w-12 h-12 text-gray-600 animate-bounce" />
+      {/* Header */}
+      <div className="flex items-center justify-center space-x-4 p-4 rounded-2xl shadow-lg">
         <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-green-500 text-center">
           Үг бүтээх тоглоом
         </h1>
-        <Target className="w-12 h-12 text-gray-600 animate-bounce" />
       </div>
 
-      {/* Image and text to speech */}
+      {/* Image + text-to-speech */}
       {wordData.image && (
         <div className="relative mb-4 group mt-6">
           <Image
@@ -74,7 +76,8 @@ export const WordCard: React.FC<Props> = ({ wordData, onNext }) => {
           </div>
         </div>
       )}
-      {/* Display letters drag and drop */}
+
+      {/* Drag and drop letters */}
       <DragDropWord
         ref={dragDropRef}
         word={wordData.word}
@@ -82,51 +85,44 @@ export const WordCard: React.FC<Props> = ({ wordData, onNext }) => {
         onSlotsChange={setSlots}
       />
 
-      {/* Pool text to speech */}
+      {/* Text-to-speech for current slots */}
       <Volume2
         onClick={handleSpeakSlots}
-        className="w-10 h-10 text-green-600 cursor-pointer hover:text-green-800 transition"
+        className="w-10 h-10 text-green-600 cursor-pointer hover:text-green-800 transition mt-2"
       />
 
-      <div className="w-full flex flex-col item-center">
-        {/* 🎤 Speech-to-Text */}
-        <div className="flex flex-col items-center mt-4">
-          <VoiceTranscriber
-            targetWord={wordData.word}
-            onCorrect={handleCorrectSpeech}
-          />
-        </div>
-
-        {/* Check/Next button */}
-        <div className="flex flex-col items-center mt-4 ">
-          <button
-            onClick={handleCheckOrNext}
-            className={`mt-4 px-6 py-2 rounded-full shadow-md text-lg font-bold transition ${
-              isCorrect === null
-                ? "bg-green-500 text-white hover:bg-green-600"
-                : isCorrect
-                ? "bg-yellow-400 text-black hover:bg-yellow-500"
-                : "bg-blue-500 text-white hover:bg-blue-600"
-            }`}
-          >
-            {isCorrect === null
-              ? "Шалгах"
-              : isCorrect
-              ? "Дараах"
-              : "Дахин эхлэх"}
-          </button>
-        </div>
-
-        {/* Pop up message */}
-        {showPopup && (
-          <div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none">
-            <div className="bg-white px-6 py-4 rounded-2xl shadow-2xl text-xl font-bold text-center transform transition-all duration-500 ease-out scale-110 -translate-y-4 opacity-100">
-              {showPopup}
-            </div>
-          </div>
-        )}
+      {/* Speech-to-text */}
+      <div className="flex flex-col items-center mt-4">
+        <VoiceTranscriber
+          targetWord={wordData.word}
+          onCorrect={handleCorrectSpeech}
+        />
       </div>
+
+      {/* Check/Next button */}
+      <div className="flex flex-col items-center mt-4">
+        <button
+          onClick={handleCheckOrNext}
+          className={`mt-4 px-6 py-2 rounded-full shadow-md text-lg font-bold transition ${
+            isCorrect === null
+              ? "bg-green-500 text-white hover:bg-green-600"
+              : isCorrect
+              ? "bg-yellow-400 text-black hover:bg-yellow-500"
+              : "bg-blue-500 text-white hover:bg-blue-600"
+          }`}
+        >
+          {isCorrect === null ? "Шалгах" : isCorrect ? "Дараах" : "Дахин эхлэх"}
+        </button>
+      </div>
+
+      {/* Celebration */}
+      <Celebration
+        status={celebrationStatus}
+        word={wordData.word}
+        onDone={() => setCelebrationStatus(null)}
+      />
     </div>
   );
 };
+
 WordCard.displayName = "WordCard";
