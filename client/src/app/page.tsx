@@ -1,7 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Lock, CheckCircle, Star, Sparkles } from "lucide-react";
+import {
+  Lock,
+  CheckCircle,
+  Star,
+  Cat,
+  Panda,
+  Smile,
+  PandaIcon,
+  CatIcon,
+} from "lucide-react";
 import { useRouter } from "next/navigation";
 
 interface Level {
@@ -136,7 +145,7 @@ export default function RoadMap() {
       route: "/main/wordcard/6",
       section: "WordCard",
       x: 55,
-      y: 70,
+      y: 50,
       gameType: "wordcard",
     },
     {
@@ -278,9 +287,9 @@ export default function RoadMap() {
   const getLevelLabel = (level: Level) => {
     const index = parseInt(level.route.split("/").pop() || "0", 10) + 1;
     if (level.gameType === "wordcard") {
-      return `W${index}`;
+      return <PandaIcon className="w-5 h-5 text-black" />; // panda icon placeholder
     } else {
-      return `C${index}`;
+      return <CatIcon className="w-5 h-5 text-black" />; // cat icon placeholder
     }
   };
 
@@ -289,7 +298,7 @@ export default function RoadMap() {
       <div
         className="absolute inset-0 bg-cover bg-center"
         style={{
-          backgroundImage: "url('/images/bg.avif')",
+          backgroundImage: "url('/images/green.avif')",
           backgroundPosition: "center 20%",
         }}
       />
@@ -453,13 +462,13 @@ export default function RoadMap() {
         <div className="space-y-2 text-sm">
           <div className="flex items-center gap-2">
             <span className="bg-cyan-200 text-cyan-800 px-2 py-1 rounded font-bold">
-              W
+              <Cat />
             </span>
             <span>Үг бүтээх тоглоом</span>
           </div>
           <div className="flex items-center gap-2">
             <span className="bg-fuchsia-200 text-fuchsia-800 px-2 py-1 rounded font-bold">
-              C
+              <Panda />
             </span>
             <span>Үг хайх тоглоом</span>
           </div>
