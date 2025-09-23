@@ -4,36 +4,22 @@ import { User, LogOut, Map, BookOpen, Home, Trophy } from "lucide-react";
 export default function Sidebar() {
   const menuItems = [
     {
-      id: "profile",
-      label: "Profile",
-      icon: User,
-      color: "text-blue-600",
-      href: "/parent",
-    },
-    {
       id: "roadmap",
-      label: "Roadmap",
+      label: "Даалгавар",
       icon: Map,
       color: "text-cyan-600",
       href: "/",
     },
     {
       id: "letters",
-      label: "Letters",
+      label: "Цагаан Толгой",
       icon: BookOpen,
       color: "text-purple-600",
       href: "/main/letters",
     },
     {
-      id: "achievements",
-      label: "Achievements",
-      icon: Trophy,
-      color: "text-amber-600",
-      href: "/achievements",
-    },
-    {
       id: "logout",
-      label: "Log Out",
+      label: "Гарах",
       icon: LogOut,
       color: "text-slate-600",
       href: "/logout",
@@ -49,10 +35,8 @@ export default function Sidebar() {
             <Home className="w-6 h-6 text-blue-600" />
           </div>
           <div>
-            <h2 className="text-lg font-semibold text-slate-800">
-              LittleReader
-            </h2>
-            <p className="text-sm text-slate-500">Learn & Play</p>
+            <h2 className="text-lg font-semibold text-slate-800">Хэрэглэгч</h2>
+            {/* <p className="text-sm text-slate-500">Learn & Play</p> */}
           </div>
         </div>
       </div>
