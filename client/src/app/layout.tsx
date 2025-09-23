@@ -33,7 +33,7 @@ export default function RootLayout({
         <TextSpeakerProvider>
           <div className="flex h-screen">
             {/* Sidebar - fixed left side */}
-            <aside className="w-64 bg-gray-100 shadow-md p-4 fixed h-full left-0 top-0">
+            <aside className="w-64 bg-gray-100 shadow-md  fixed h-full left-0 top-0">
               <Sidebar />
             </aside>
 

@@ -83,21 +83,6 @@ export default function Sidebar() {
           })}
         </ul>
       </nav>
-
-      {/* Footer */}
-      <div className="p-4 border-t border-slate-200">
-        <div className="bg-gradient-to-r from-cyan-50 to-blue-50 rounded-xl p-4">
-          <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-cyan-100 rounded-full flex items-center justify-center">
-              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-            </div>
-            <div className="flex-1">
-              <p className="text-sm font-medium text-slate-800">Status</p>
-              <p className="text-xs text-cyan-600">Online & learning</p>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   );
 }
