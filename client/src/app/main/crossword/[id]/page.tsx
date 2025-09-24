@@ -22,7 +22,9 @@ export default function CrossWordPage() {
 
   const handleNext = () => {
     if (!currentLevel) {
-      console.error("Could not find the current crossword in the levels array.");
+      console.error(
+        "Could not find the current crossword in the levels array."
+      );
       router.push("/main/roadmap");
       return;
     }

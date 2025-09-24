@@ -5,7 +5,7 @@ import { WordData } from "../../../utils/data";
 import { DragDropWord } from "./DragDropWord";
 import Image from "next/image";
 import { useTextSpeaker } from "@/provider/TextContext";
-import { Target, Volume2 } from "lucide-react";
+import { Volume2 } from "lucide-react";
 import VoiceTranscriber from "./VoiceTranscriber";
 import Celebration from "@/app/components/Celebration";
 

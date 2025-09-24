@@ -63,15 +63,27 @@ export default function WordCardPage() {
   }
 
   return (
-    <div className="p-4 sm:p-6 min-h-screen bg-gray-50 flex flex-col items-center justify-center">
+    <div
+      className="relative p-4 sm:p-6 min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50"
+      style={{
+        backgroundImage: "url('/images/green.avif')",
+        backgroundPosition: "center 20%",
+      }}
+    >
+      {/* overlay to soften image */}
+      <div className="absolute inset-0 bg-white/60 backdrop-blur-sm" />
+
       <Link
         href="/"
-        className="absolute top-4 right-4 flex items-center gap-2 text-gray-600 hover:text-blue-600 transition"
+        className="absolute top-4 right-4 flex items-center gap-2 text-gray-600 hover:text-blue-600 transition z-10"
       >
         <ArrowLeft size={20} />
         Буцах
       </Link>
-      <WordCard wordData={wordData} onNext={handleNext} />
+
+      <div className="z-10">
+        <WordCard wordData={wordData} onNext={handleNext} />
+      </div>
     </div>
   );
 }
