@@ -1,7 +1,18 @@
 "use client";
 
-import { useState, useEffect, useRef, forwardRef, useImperativeHandle } from "react";
-import { DndContext, useDraggable, useDroppable, DragEndEvent } from "@dnd-kit/core";
+import {
+  useState,
+  useEffect,
+  useRef,
+  forwardRef,
+  useImperativeHandle,
+} from "react";
+import {
+  DndContext,
+  useDraggable,
+  useDroppable,
+  DragEndEvent,
+} from "@dnd-kit/core";
 import { WordData } from "../../../utils/data";
 
 interface Props {
@@ -18,9 +29,12 @@ interface DragDropWordProps {
 }
 
 export const DraggableLetter: React.FC<PoolItem> = ({ id, letter }) => {
-  const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({ id });
+  const { attributes, listeners, setNodeRef, transform, isDragging } =
+    useDraggable({ id });
   const style = {
-    transform: transform ? `translate3d(${transform.x}px,${transform.y}px,0)` : undefined,
+    transform: transform
+      ? `translate3d(${transform.x}px,${transform.y}px,0)`
+      : undefined,
     transition: isDragging ? "none" : "transform 0.3s ease",
   };
   return (
@@ -30,7 +44,9 @@ export const DraggableLetter: React.FC<PoolItem> = ({ id, letter }) => {
       {...listeners}
       {...attributes}
       className={`w-12 h-12 flex items-center justify-center rounded-lg border font-bold text-lg cursor-grab transition ${
-        isDragging ? "bg-yellow-300 scale-110 shadow-lg" : "bg-gray-200 hover:bg-gray-300"
+        isDragging
+          ? "bg-yellow-300 scale-110 shadow-lg"
+          : "bg-gray-200 hover:bg-gray-300"
       }`}
     >
       {letter}
@@ -44,9 +60,17 @@ interface DroppableSlotProps {
   letter: string | null;
   onRemoveLetter: () => void;
 }
-export const DroppableSlot: React.FC<DroppableSlotProps> = ({ id, letter, onRemoveLetter }) => {
+export const DroppableSlot: React.FC<DroppableSlotProps> = ({
+  id,
+  letter,
+  onRemoveLetter,
+}) => {
   const { setNodeRef, isOver } = useDroppable({ id });
-  const bg = letter ? "bg-gray-200" : isOver ? "bg-yellow-200 border-yellow-500" : "bg-gray-100 border-gray-300";
+  const bg = letter
+    ? "bg-gray-200"
+    : isOver
+    ? "bg-yellow-200 border-yellow-500"
+    : "bg-gray-100 border-gray-300";
   return (
     <div
       ref={setNodeRef}
@@ -59,13 +83,17 @@ export const DroppableSlot: React.FC<DroppableSlotProps> = ({ id, letter, onRemo
 };
 DroppableSlot.displayName = "DroppableSlot";
 
-export const DragDropWord = forwardRef<{
-  resetSlots: () => void;
-}, DragDropWordProps>(({ word, letters, onSlotsChange }, ref) => {
+export const DragDropWord = forwardRef<
+  {
+    resetSlots: () => void;
+  },
+  DragDropWordProps
+>(({ word, letters, onSlotsChange }, ref) => {
   const [slots, setSlots] = useState<(string | null)[]>([]);
   const [pool, setPool] = useState<PoolItem[]>([]);
 
-  const initPool = () => letters.map((l, idx) => ({ letter: l, id: `${l}-${idx}-${Date.now()}` }));
+  const initPool = () =>
+    letters.map((l, idx) => ({ letter: l, id: `${l}-${idx}-${Date.now()}` }));
 
   const resetSlots = () => {
     setSlots(Array(word.length).fill(null));
@@ -91,7 +119,13 @@ export const DragDropWord = forwardRef<{
         if (!isNaN(slotIdx)) {
           const newSlots = [...slots];
           if (newSlots[slotIdx]) {
-            setPool((prev) => [...prev, { letter: newSlots[slotIdx]!, id: `${newSlots[slotIdx]}-${Date.now()}` }]);
+            setPool((prev) => [
+              ...prev,
+              {
+                letter: newSlots[slotIdx]!,
+                id: `${newSlots[slotIdx]}-${Date.now()}`,
+              },
+            ]);
           }
           newSlots[slotIdx] = letter;
           setSlots(newSlots);
@@ -107,7 +141,8 @@ export const DragDropWord = forwardRef<{
           }
         }
         setSlots(newSlots);
-        if (!pool.find((p) => p.id === letterId)) setPool((prev) => [...prev, { letter, id: letterId }]);
+        if (!pool.find((p) => p.id === letterId))
+          setPool((prev) => [...prev, { letter, id: letterId }]);
       }
     }
   };
@@ -126,7 +161,10 @@ export const DragDropWord = forwardRef<{
               const newSlots = [...slots];
               newSlots[idx] = null;
               setSlots(newSlots);
-              setPool((prev) => [...prev, { letter, id: `${letter}-${Date.now()}` }]);
+              setPool((prev) => [
+                ...prev,
+                { letter, id: `${letter}-${Date.now()}` },
+              ]);
             }}
           />
         ))}
