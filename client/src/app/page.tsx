@@ -7,7 +7,6 @@ import {
   Star,
   Cat,
   Panda,
-  Smile,
   PandaIcon,
   CatIcon,
 } from "lucide-react";
@@ -63,19 +62,7 @@ const SectionSeparator = ({
         top: `${y}%`,
         transform: "translate(-50%, -50%)",
       }}
-    >
-      {/* <div className="relative">
-        <div className="w-28 h-28 rounded-full bg-white shadow-xl border-4 border-yellow-400 flex items-center justify-center mb-3"></div>
-        <div className="absolute -top-2 -right-2">
-          <Sparkles className="w-8 h-8 text-yellow-500" />
-        </div>
-      </div>
-      <div className="bg-gradient-to-r from-yellow-300 to-orange-300 px-4 py-2 rounded-full shadow-lg border-2 border-white">
-        <span className="text-lg font-bold text-gray-800">
-          {section === "WordCard" ? "Үг бүтээх" : "Үг хайх"}
-        </span>
-      </div> */}
-    </div>
+    ></div>
   );
 };
 
@@ -287,9 +274,9 @@ export default function RoadMap() {
   const getLevelLabel = (level: Level) => {
     const index = parseInt(level.route.split("/").pop() || "0", 10) + 1;
     if (level.gameType === "wordcard") {
-      return <PandaIcon className="w-5 h-5 text-black" />; // panda icon placeholder
+      return <PandaIcon className="w-5 h-5 text-black" />;
     } else {
-      return <CatIcon className="w-5 h-5 text-black" />; // cat icon placeholder
+      return <CatIcon className="w-5 h-5 text-black" />;
     }
   };
 
@@ -475,16 +462,8 @@ export default function RoadMap() {
         </div>
       </div>
 
-      <div className="absolute top-10 left-10 w-10 h-10 bg-yellow-300 rounded-full opacity-70 animate-bounce"></div>
-      <div className="absolute top-20 right-20 w-8 h-8 bg-pink-300 rounded-full opacity-70 animate-pulse"></div>
-      <div
-        className="absolute bottom-20 left-20 w-12 h-12 bg-blue-300 rounded-full opacity-70 animate-bounce"
-        style={{ animationDelay: "1s" }}
-      ></div>
-      <div
-        className="absolute bottom-10 right-10 w-9 h-9 bg-purple-300 rounded-full opacity-70 animate-pulse"
-        style={{ animationDelay: "2s" }}
-      ></div>
+      <div style={{ animationDelay: "1s" }}></div>
+      <div style={{ animationDelay: "2s" }}></div>
     </div>
   );
 }
